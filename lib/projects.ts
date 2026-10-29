@@ -136,6 +136,37 @@ export function getHeroProject(): Project {
 }
 
 /**
+ * Curated list of stable project IDs for the cinematic Hero background rotation sequence.
+ * 4 visually distinctive cuts showcasing interior architecture, wilderness landscape,
+ * nocturnal automotive, and talent portraiture:
+ * 1. hanansha-home: Hanansha Luxury Home (Interior Architecture & calm elegance)
+ * 2. attappady-travel: Attappady Wilderness Journey (Misty mountain & river landscape)
+ * 3. onroad-car-edit: Night Highway Drift & Roll (Nocturnal automotive neon reflections)
+ * 4. alphy-actress-reel: Alphy Panjikaran Spotlight (Celebrity fashion portraiture)
+ */
+export const HERO_ROTATION_PROJECT_IDS = [
+  'hanansha-home',
+  'attappady-travel',
+  'onroad-car-edit',
+  'alphy-actress-reel'
+] as const;
+
+/**
+ * Returns the curated selection of video projects for the Hero cinematic background rotation.
+ * Validates that each referenced project exists and is published.
+ */
+export function getHeroRotationProjects(): Project[] {
+  const rotationProjects = HERO_ROTATION_PROJECT_IDS
+    .map((id) => projects.find((p) => p.id === id))
+    .filter((p): p is Project => Boolean(p && p.published));
+
+  if (rotationProjects.length === 0) {
+    return [getHeroProject()];
+  }
+  return rotationProjects;
+}
+
+/**
  * Returns all published client video projects for the Full Work gallery (12 projects),
  * sorted by their display order.
  */
