@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import {
   ArrowUpRight,
   Film,
@@ -16,6 +15,7 @@ import { siteConfig, getWhatsAppUrl } from '@/lib/site-config';
 import ScrollReveal from '@/components/reactbits/ScrollReveal';
 import AnimatedContent from '@/components/reactbits/AnimatedContent';
 import VariableProximity from '@/components/reactbits/VariableProximity';
+import ProfileCard from '@/components/reactbits/ProfileCard';
 
 export default function AboutSection() {
   const directWhatsAppUrl = getWhatsAppUrl(
@@ -65,69 +65,50 @@ export default function AboutSection() {
     <section id="about" className="py-24 sm:py-32 relative bg-[#07070a] border-t border-white/10">
       <div className="site-container">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 xl:gap-20 items-start">
-          {/* Left Column: Shefeer's Real Photograph */}
+          {/* Left Column: Interactive React Bits ProfileCard */}
           <div className="lg:col-span-5 xl:col-span-5 2xl:col-span-5 space-y-6">
             <div className="flex items-center gap-2 text-xs font-mono tracking-widest text-accent uppercase">
               <Film className="w-3.5 h-3.5" />
               <span>03 // ABOUT SHEFEER</span>
             </div>
 
-            {/* Editorial Portrait Frame */}
+            {/* React Bits: Interactive 3D Holographic ProfileCard */}
             <AnimatedContent direction="vertical" distance={20} duration={0.6}>
-              <div className="relative group">
-                {/* Filmic Ambient Glow */}
-                <div className="absolute -inset-2 bg-gradient-to-b from-accent/20 via-accent/5 to-transparent rounded-xl blur-xl opacity-50 group-hover:opacity-80 transition duration-500" />
+              <div className="relative group flex flex-col items-center lg:items-start">
+                {/* Filmic Ambient Glow behind card */}
+                <div className="absolute -inset-2 bg-gradient-to-b from-accent/25 via-accent/5 to-transparent rounded-2xl blur-xl opacity-50 group-hover:opacity-80 transition duration-500 pointer-events-none" />
 
-                <div className="relative max-w-[420px] lg:max-w-none mx-auto lg:mx-0 aspect-[3/4] sm:aspect-[4/5] bg-gradient-to-b from-[#151522] via-[#0c0c14] to-[#050508] border border-white/15 rounded-lg overflow-hidden shadow-2xl">
-                  {/* Shefeer's Real Photograph - Preserves genuine features and proportions */}
-                  <Image
-                    src="/assets/shefeer.png"
-                    alt="Muhammed Shefeer K - Freelance Video Editor"
-                    width={800}
-                    height={1000}
-                    priority
-                    className="w-full h-full object-cover object-top filter contrast-[1.04] transition-transform duration-700 ease-out group-hover:scale-[1.02]"
-                  />
-
-                  {/* Restrained bottom gradient for HUD text legibility - upper body & face remain completely visible */}
-                  <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none" />
-
-                  {/* Corner Accent Tick Marks */}
-                  <div className="absolute top-3 left-3 text-white/40 font-mono text-xs pointer-events-none">
-                    ┌
-                  </div>
-                  <div className="absolute top-3 right-3 text-white/40 font-mono text-xs pointer-events-none">
-                    ┐
-                  </div>
-                  <div className="absolute bottom-3 left-3 text-white/40 font-mono text-xs pointer-events-none">
-                    └
-                  </div>
-                  <div className="absolute bottom-3 right-3 text-white/40 font-mono text-xs pointer-events-none">
-                    ┘
-                  </div>
-
-                  {/* Status Overlay Tag */}
-                  <div className="absolute top-4 left-4 z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-black/75 backdrop-blur-md border border-white/15 text-[10px] font-mono text-white/90">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399] animate-pulse" />
-                    <span>OPEN FOR FREELANCE PROJECTS</span>
-                  </div>
-
-                  {/* Bottom Portrait HUD */}
-                  <div className="absolute bottom-4 inset-x-4 z-10 flex items-end justify-between text-white font-mono text-[10px] bg-black/70 backdrop-blur-md p-3 rounded border border-white/10">
-                    <div>
-                      <p className="text-accent font-bold tracking-wider text-xs uppercase">
-                        Muhammed Shefeer K
-                      </p>
-                      <p className="text-white/60 text-[10px]">Freelance Video Editor</p>
-                    </div>
-                    <span className="px-2 py-0.5 rounded bg-white/10 text-white/80 font-mono">
-                      Kochi, Kerala, IN
-                    </span>
-                  </div>
-                </div>
+                <ProfileCard
+                  name="Muhammed Shefeer K"
+                  title="Freelance Video Editor"
+                  handle="reefehs_"
+                  status="Open for Projects"
+                  statusColor="#22c55e"
+                  contactText="Connect"
+                  avatarUrl="/assets/shefeer.png"
+                  holo={0.7}
+                  glare={0.4}
+                  tiltStrength={10}
+                  parallax={6}
+                  radius={16}
+                  enableTilt={true}
+                  intro={true}
+                  showUserInfo={true}
+                  theme="dark"
+                  backdropColor="#0e0e13"
+                  onContactClick={() => {
+                    const el = document.getElementById('contact');
+                    if (el) {
+                      el.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                      window.open(directWhatsAppUrl, '_blank');
+                    }
+                  }}
+                  className="mx-auto lg:mx-0 shadow-2xl"
+                />
 
                 {/* Confirmed Technical Stack Card */}
-                <div className="mt-4 p-4 rounded bg-white/[0.02] border border-white/10 space-y-3">
+                <div className="w-full max-w-[420px] mt-4 p-4 rounded bg-white/[0.02] border border-white/10 space-y-3">
                   <div>
                     <p className="text-[10px] font-mono uppercase tracking-widest text-accent">
                       Confirmed Editing Software Stack
