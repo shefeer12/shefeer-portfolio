@@ -1,0 +1,493 @@
+[
+  {
+    "id": "hanansha-home",
+    "order": 0,
+    "title": "Hanansha Luxury Home",
+    "description": "A high-aesthetic 9:16 vertical video showcasing interior textures, architectural lighting, and spatial pacing.",
+    "category": "Shorts & Reels",
+    "year": "2025",
+    "duration": "00:34",
+    "durationSeconds": 34.03,
+    "aspectRatio": "9:16",
+    "featured": true,
+    "published": true,
+    "role": "Vertical Edit · Pacing & Rhythm · DaVinci Color Grade · Ambient Foley",
+    "thumbnailUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207628/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/01_Social_Media_Reels/Hanansha_home.jpg",
+    "thumbnail": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207628/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/01_Social_Media_Reels/Hanansha_home.jpg",
+    "videoUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/q_auto,f_auto/v1793207628/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/01_Social_Media_Reels/Hanansha_home.mp4",
+    "videoType": "cloudinary",
+    "isDemoPlaceholder": false,
+    "brief": "A high-aesthetic 9:16 vertical video showcasing the interior textures, architectural lighting, and spatial elegance of a luxury modern home.",
+    "overview": "Engineered with smooth speed ramps and micro match-cuts between architectural elements. Every cut aligns with acoustic accents to evoke calm elegance.",
+    "editingApproach": {
+      "hookStrategy": "Gliding wide reveal of the sunlit living space coupled with a warm ambient riser to immediately establish scale.",
+      "pacingAndRhythm": "Smooth cadence using invisible whip transitions between doorways, natural textures, and open living spaces.",
+      "soundDesign": "Stereo marble footsteps, subtle breeze through sheer curtains, and warm acoustic room tone with tactile transient hits.",
+      "colorGrading": "Natural warm tones, preserved interior wood richness, and clean highlights graded in DaVinci Resolve Studio."
+    },
+    "tools": [
+      "Adobe Premiere Pro",
+      "After Effects",
+      "DaVinci Resolve"
+    ],
+    "tags": [
+      "9:16 Vertical",
+      "Interior Architecture",
+      "Social Reel",
+      "Color Grading",
+      "Sound Design"
+    ]
+  },
+  {
+    "id": "real-estate-sales",
+    "order": 1,
+    "title": "Prime Property Ad Promo",
+    "description": "Real estate promotional video engineered with punchy feature callouts and dynamic cuts.",
+    "category": "Brand & Commercial",
+    "year": "2025",
+    "duration": "00:56",
+    "durationSeconds": 56.31,
+    "aspectRatio": "9:16",
+    "featured": false,
+    "published": true,
+    "role": "Commercial Cut · Motion Graphic Titles · Sound Impact",
+    "thumbnailUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207626/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/02_Ads/Real_Estate_sale_s.jpg",
+    "thumbnail": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207626/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/02_Ads/Real_Estate_sale_s.jpg",
+    "videoUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/q_auto,f_auto/v1793207626/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/02_Ads/Real_Estate_sale_s.mp4",
+    "videoType": "cloudinary",
+    "isDemoPlaceholder": false,
+    "brief": "A real estate promotional edit highlighting key architectural features within the initial seconds, backed by dynamic text callouts and punchy cuts.",
+    "overview": "High-energy property tour that highlights key selling points within the initial 4 seconds, backed by dynamic text callouts and punchy cuts.",
+    "editingApproach": {
+      "hookStrategy": "Dramatic aerial drone shot punch-in to the master entrance with an attention-grabbing title overlay.",
+      "pacingAndRhythm": "Rapid sequence of feature reveals paced to build urgency and excitement.",
+      "soundDesign": "Sub-bass whooshes on camera transitions and clean notification pops for feature badges.",
+      "colorGrading": "Lush green exterior balance and vibrant architectural daylight palette in DaVinci Resolve."
+    },
+    "tools": [
+      "Premiere Pro",
+      "After Effects"
+    ],
+    "tags": [
+      "Real Estate",
+      "Ad Creative",
+      "Commercial",
+      "Motion Graphics"
+    ]
+  },
+  {
+    "id": "alphy-actress-reel",
+    "order": 2,
+    "title": "Alphy Panjikaran Spotlight",
+    "description": "Fashion and talent profile edit capturing the expressive presence and styling of actress Alphy Panjikaran.",
+    "category": "Shorts & Reels",
+    "year": "2025",
+    "duration": "00:29",
+    "durationSeconds": 29.57,
+    "aspectRatio": "9:16",
+    "featured": false,
+    "published": true,
+    "client": "Alphy Panjikaran",
+    "role": "Celebrity Spotlight · Glitch Transitions · Beat Sync",
+    "thumbnailUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207627/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/01_Social_Media_Reels/alphy_actress.jpg",
+    "thumbnail": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207627/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/01_Social_Media_Reels/alphy_actress.jpg",
+    "videoUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/q_auto,f_auto/v1793207627/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/01_Social_Media_Reels/alphy_actress.mp4",
+    "videoType": "cloudinary",
+    "isDemoPlaceholder": false,
+    "brief": "Fashion and talent profile edit capturing the personality and expressive presence of actress Alphy Panjikaran.",
+    "overview": "Editorial pacing blending slow-motion portraiture with rhythmic punch cuts, color isolation, and modern typography.",
+    "editingApproach": {
+      "hookStrategy": "Close-up eye contact shot synced with a deep sub-drop and typographic title flash.",
+      "pacingAndRhythm": "Dynamic contrast between 0.3s quick flashes and fluid slow-motion holds.",
+      "soundDesign": "Camera shutter clicks, cinematic sub-hits, and warm atmospheric bassline.",
+      "colorGrading": "Moody cinematic contrast with luminous, natural skin tone preservation."
+    },
+    "tools": [
+      "Premiere Pro",
+      "DaVinci Resolve",
+      "After Effects"
+    ],
+    "tags": [
+      "Fashion Reel",
+      "Portrait Cut",
+      "Celebrity",
+      "Sound Design"
+    ]
+  },
+  {
+    "id": "mes-college-program",
+    "order": 3,
+    "title": "MES College Fest Energy Cut",
+    "description": "High-voltage recap edit of the campus cultural festival capturing crowd energy and performance highlights.",
+    "category": "Cinematic",
+    "year": "2025",
+    "duration": "00:19",
+    "durationSeconds": 19.53,
+    "aspectRatio": "9:16",
+    "featured": false,
+    "published": true,
+    "client": "MES College Fest",
+    "role": "Event Aftermovie · Fast-Paced Rhythmic Cuts · Crowd Audio Mixing",
+    "thumbnailUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207627/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/01_Social_Media_Reels/Mescollegeprogram.jpg",
+    "thumbnail": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207627/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/01_Social_Media_Reels/Mescollegeprogram.jpg",
+    "videoUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/q_auto,f_auto/v1793207627/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/01_Social_Media_Reels/Mescollegeprogram.mp4",
+    "videoType": "cloudinary",
+    "isDemoPlaceholder": false,
+    "brief": "A fast-paced recap edit of the annual campus cultural festival designed for high engagement on social feeds.",
+    "overview": "Forward momentum, crowd cheer syncs, and stage lighting match cuts capturing the energy of live performance.",
+    "editingApproach": {
+      "hookStrategy": "Stage blackout suddenly ignited by a flash of stage lights and bass drop.",
+      "pacingAndRhythm": "Hyper-speed rhythmic cutting with seamless motion flow.",
+      "soundDesign": "Live venue room reverberation blended cleanly with soundtrack.",
+      "colorGrading": "Punchy concert lighting grading preserving stage contrast."
+    },
+    "tools": [
+      "Premiere Pro",
+      "CapCut"
+    ],
+    "tags": [
+      "Event Cut",
+      "Campus Fest",
+      "High Energy",
+      "Fast Paced"
+    ]
+  },
+  {
+    "id": "actor-suryapooja",
+    "order": 4,
+    "title": "Surya Pooja Celebrity Edit",
+    "description": "Editorial portrait cut pairing behind-the-scenes moments with acoustic pacing and warm tone grading.",
+    "category": "Creator Edits",
+    "year": "2025",
+    "duration": "00:23",
+    "durationSeconds": 23.08,
+    "aspectRatio": "9:16",
+    "featured": false,
+    "published": true,
+    "client": "Surya Pooja",
+    "role": "Editorial Portrait · Frame Masking · Warm Tone Finish",
+    "thumbnailUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207627/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/01_Social_Media_Reels/Actorsuryapooja.jpg",
+    "thumbnail": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207627/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/01_Social_Media_Reels/Actorsuryapooja.jpg",
+    "videoUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/q_auto,f_auto/v1793207627/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/01_Social_Media_Reels/Actorsuryapooja.mp4",
+    "videoType": "cloudinary",
+    "isDemoPlaceholder": false,
+    "brief": "Short-form celebrity social cut highlighting behind-the-scenes moments and candid elegance.",
+    "overview": "Pacing that respects emotional nuance, pairing gentle camera pushes with acoustic accompaniment.",
+    "editingApproach": {
+      "hookStrategy": "Intimate close-up smiling turn paired with a soft musical swell.",
+      "pacingAndRhythm": "Gentle, breathing rhythm that allows the viewer to absorb every expression.",
+      "soundDesign": "Subtle atmospheric room tone and warm organic acoustic resonance.",
+      "colorGrading": "Golden hour skin tones with rich shadow depth in DaVinci Resolve Studio."
+    },
+    "tools": [
+      "DaVinci Resolve",
+      "Premiere Pro"
+    ],
+    "tags": [
+      "Celebrity Reel",
+      "Portrait",
+      "Color Grade",
+      "Emotional Pacing"
+    ]
+  },
+  {
+    "id": "football-freestyle",
+    "order": 5,
+    "title": "Street Football Freestyle",
+    "description": "Athletic skill showcase featuring speed ramps and tactile impact audio.",
+    "category": "Shorts & Reels",
+    "year": "2025",
+    "duration": "00:21",
+    "durationSeconds": 21.63,
+    "aspectRatio": "9:16",
+    "featured": false,
+    "published": true,
+    "role": "Sports Kinetic Cut · Speed Ramps · Impact Foley",
+    "thumbnailUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207623/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/01_Social_Media_Reels/Football_freestyle.jpg",
+    "thumbnail": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207623/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/01_Social_Media_Reels/Football_freestyle.jpg",
+    "videoUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/q_auto,f_auto/v1793207623/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/01_Social_Media_Reels/Football_freestyle.mp4",
+    "videoType": "cloudinary",
+    "isDemoPlaceholder": false,
+    "brief": "Showcasing intricate street football ball control with precision speed ramps and punchy impact sound design.",
+    "overview": "Speed ramps down to slow-motion at the peak of each trick, synchronized to beat drops.",
+    "editingApproach": {
+      "hookStrategy": "Ball juggle flick directly toward the camera lens in first 1.5 seconds.",
+      "pacingAndRhythm": "Speed-ramped cadence that highlights technical footwork complexity.",
+      "soundDesign": "Crisp ball kicks, shoe squeaks on asphalt, and tactile whoosh foley.",
+      "colorGrading": "Urban street tone with high clarity and balanced sky contrast."
+    },
+    "tools": [
+      "Premiere Pro",
+      "After Effects",
+      "CapCut"
+    ],
+    "tags": [
+      "Sports",
+      "Speed Ramps",
+      "Freestyle",
+      "Sound Design"
+    ]
+  },
+  {
+    "id": "attappady-travel",
+    "order": 6,
+    "title": "Attappady Wilderness Journey",
+    "description": "A cinematic 9:16 travel vignette through the mist-shrouded hills and riverbeds of Attappady.",
+    "category": "Cinematic",
+    "year": "2025",
+    "duration": "00:24",
+    "durationSeconds": 24.2,
+    "aspectRatio": "9:16",
+    "featured": false,
+    "published": true,
+    "role": "Travel Film · Atmospheric Soundscapes · Landscape Grading",
+    "thumbnailUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207622/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/05_Travel/Attappady.jpg",
+    "thumbnail": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207622/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/05_Travel/Attappady.jpg",
+    "videoUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/q_auto,f_auto/v1793207622/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/05_Travel/Attappady.mp4",
+    "videoType": "cloudinary",
+    "isDemoPlaceholder": false,
+    "brief": "A cinematic 9:16 journey through the mist-shrouded hills and winding riverbeds of Attappady.",
+    "overview": "Travel cut combining sweeping drone vistas with intimate textures of forest flora and mountain fog.",
+    "editingApproach": {
+      "hookStrategy": "Mist parting over green ridges set to an ambient tribal drone.",
+      "pacingAndRhythm": "Cadence that lets natural landscape beauty breathe without rushing.",
+      "soundDesign": "Stereo river murmurs, mountain wind, bird calls, and deep resonant strings.",
+      "colorGrading": "Lush natural greens, rich earth tones, and preserved mist highlights."
+    },
+    "tools": [
+      "Premiere Pro",
+      "DaVinci Resolve"
+    ],
+    "tags": [
+      "Travel",
+      "Nature",
+      "Cinematic",
+      "Landscape"
+    ]
+  },
+  {
+    "id": "onroad-car-edit",
+    "order": 7,
+    "title": "Night Highway Drift & Roll",
+    "description": "Nocturnal automotive rolling shots featuring highway reflections and exhaust audio.",
+    "category": "Cinematic",
+    "year": "2025",
+    "duration": "00:28",
+    "durationSeconds": 28.17,
+    "aspectRatio": "9:16",
+    "featured": false,
+    "published": true,
+    "role": "Automotive Cut · Shutter Match · Engine Exhaust Audio Mix",
+    "thumbnailUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207621/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/04_Car%20%20Edits/OnRoad.jpg",
+    "thumbnail": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207621/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/04_Car%20%20Edits/OnRoad.jpg",
+    "videoUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/q_auto,f_auto/v1793207621/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/04_Car%20%20Edits/OnRoad.mp4",
+    "videoType": "cloudinary",
+    "isDemoPlaceholder": false,
+    "brief": "Nocturnal rolling shots of sports cars cruising highway corridors with neon city reflections.",
+    "overview": "High-octane car edit featuring lens flares, rolling wheel matches, and throaty exhaust notes synced to synthwave.",
+    "editingApproach": {
+      "hookStrategy": "Low-angle taillight launch off the line with tire screech foley.",
+      "pacingAndRhythm": "Driving cadence synced to electronic music rhythm.",
+      "soundDesign": "Turbo spool whines, rev-limiter pops, and low-frequency road roar.",
+      "colorGrading": "Cyan & amber neon grade with deep blacks and crisp chrome highlights."
+    },
+    "tools": [
+      "Premiere Pro",
+      "After Effects",
+      "DaVinci Resolve"
+    ],
+    "tags": [
+      "Automotive",
+      "Night Roll",
+      "Car Edit",
+      "Sound Design"
+    ]
+  },
+  {
+    "id": "drananthu-podcast",
+    "order": 8,
+    "title": "Dr. Ananthu Mindset Podcast Cut",
+    "description": "Transformative conversation cut tailored for high retention with keyword subtitle emphasis.",
+    "category": "Creator Edits",
+    "year": "2025",
+    "duration": "00:44",
+    "durationSeconds": 44.84,
+    "aspectRatio": "9:16",
+    "featured": false,
+    "published": true,
+    "client": "Dr. Ananthu Podcast",
+    "role": "Podcast Retention Cut · Kinetic Word-by-Word Subtitles · Multi-Cam Switch",
+    "thumbnailUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207621/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/03_Podcast%20Reels/Drananthupodacst.jpg",
+    "thumbnail": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207621/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/03_Podcast%20Reels/Drananthupodacst.jpg",
+    "videoUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/q_auto,f_auto/v1793207621/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/03_Podcast%20Reels/Drananthupodacst.mp4",
+    "videoType": "cloudinary",
+    "isDemoPlaceholder": false,
+    "brief": "Extracting an insightful discussion segment from a full-length interview for short-form social engagement.",
+    "overview": "Paced for deep retention with animated keyword highlights, subtle b-roll overlays, and clean dialogue mastering.",
+    "editingApproach": {
+      "hookStrategy": "Thought-provoking question asked in first 1.5 seconds with visual zoom punch.",
+      "pacingAndRhythm": "Dead air surgically removed; cadence tightened for seamless conversational flow.",
+      "soundDesign": "Clean voice dialogue cleanup with subtle background atmosphere.",
+      "colorGrading": "Studio warm interior grading with clean skin tonality."
+    },
+    "tools": [
+      "Premiere Pro",
+      "After Effects"
+    ],
+    "tags": [
+      "Podcast",
+      "Creator Short",
+      "Kinetic Text",
+      "High Retention"
+    ]
+  },
+  {
+    "id": "audi-cinematic",
+    "order": 9,
+    "title": "Audi Black Edition Showcase",
+    "description": "Monochromatic automotive edit highlighting grille geometry and LED matrix sweeps.",
+    "category": "Brand & Commercial",
+    "year": "2025",
+    "duration": "00:27",
+    "durationSeconds": 27.33,
+    "aspectRatio": "9:16",
+    "featured": false,
+    "published": true,
+    "role": "Automotive Commercial · Metallic Grading · Precision Speed Cuts",
+    "thumbnailUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207620/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/04_Car%20%20Edits/audi.jpg",
+    "thumbnail": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207620/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/04_Car%20%20Edits/audi.jpg",
+    "videoUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/q_auto,f_auto/v1793207620/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/04_Car%20%20Edits/audi.mp4",
+    "videoType": "cloudinary",
+    "isDemoPlaceholder": false,
+    "brief": "A dark showcase of the Audi Black Edition highlighting exterior lines and lighting features.",
+    "overview": "Sharp post-production: precise cuts, metallic sound design accents, and deep blacks.",
+    "editingApproach": {
+      "hookStrategy": "LED signature headlight startup with an acoustic sub-bass hit.",
+      "pacingAndRhythm": "Mechanical, razor-sharp cuts locked to rhythm.",
+      "soundDesign": "Custom metallic swooshes, door latch clunks, and mechanical gear clicks.",
+      "colorGrading": "Monochromatic aesthetic with clean specular reflections."
+    },
+    "tools": [
+      "Premiere Pro",
+      "DaVinci Resolve",
+      "After Effects"
+    ],
+    "tags": [
+      "Audi",
+      "Automotive",
+      "Commercial",
+      "Metallic Grade"
+    ]
+  },
+  {
+    "id": "saffron-restaurant",
+    "order": 10,
+    "title": "Saffron Culinary Visuals",
+    "description": "Macro food cuts, searing pan audio, and rich plating visuals for culinary presentation.",
+    "category": "Brand & Commercial",
+    "year": "2025",
+    "duration": "00:32",
+    "durationSeconds": 32.27,
+    "aspectRatio": "9:16",
+    "featured": false,
+    "published": true,
+    "role": "Food & Beverage Promo · Sizzle Foley · Warm Texture Grading",
+    "thumbnailUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207626/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/01_Social_Media_Reels/Saffron.jpg",
+    "thumbnail": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207626/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/01_Social_Media_Reels/Saffron.jpg",
+    "videoUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/q_auto,f_auto/v1793207626/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/01_Social_Media_Reels/Saffron.mp4",
+    "videoType": "cloudinary",
+    "isDemoPlaceholder": false,
+    "brief": "A 9:16 culinary showcase promoting signature dishes with sensory sizzle and steam visuals.",
+    "overview": "Macro food cuts, searing pan audio, and rich plating visuals engineered to evoke appetite.",
+    "editingApproach": {
+      "hookStrategy": "Flame flare-up in slow motion with an immediate acoustic whoosh.",
+      "pacingAndRhythm": "Rhythmic assembly from raw prep to final table plating.",
+      "soundDesign": "Crispy oil sizzles, wine pour bubbles, and knife chop impacts.",
+      "colorGrading": "Warm food grading bringing out rich reds and vibrant greens."
+    },
+    "tools": [
+      "Premiere Pro",
+      "DaVinci Resolve"
+    ],
+    "tags": [
+      "Food Reel",
+      "Culinary",
+      "Restaurant Ad",
+      "Sensory Foley"
+    ]
+  },
+  {
+    "id": "election-campaign",
+    "order": 11,
+    "title": "Leadership Campaign Promo",
+    "description": "Speech pacing, community moments, and emotional music build for campaign communication.",
+    "category": "Brand & Commercial",
+    "year": "2025",
+    "duration": "00:52",
+    "durationSeconds": 52.43,
+    "aspectRatio": "9:16",
+    "featured": false,
+    "published": true,
+    "role": "Political Ad · Speech Pacing · Emotional Swell & Crowd Cuts",
+    "thumbnailUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207623/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/02_Ads/Election.jpg",
+    "thumbnail": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207623/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/02_Ads/Election.jpg",
+    "videoUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/q_auto,f_auto/v1793207623/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/02_Ads/Election.mp4",
+    "videoType": "cloudinary",
+    "isDemoPlaceholder": false,
+    "brief": "A campaign video communicating leadership vision and public address moments.",
+    "overview": "Builds from focused speech excerpts to mass gathering sequences, supported by musical swells.",
+    "editingApproach": {
+      "hookStrategy": "Direct speech opening paired with focused crowd reactions.",
+      "pacingAndRhythm": "Progressive build towards concluding rally moments.",
+      "soundDesign": "Orchestral crescendo, synchronized crowd applause, and clear speech cleanup.",
+      "colorGrading": "Dignified cinematic contrast with warm natural tones."
+    },
+    "tools": [
+      "Premiere Pro",
+      "DaVinci Resolve"
+    ],
+    "tags": [
+      "Campaign Promo",
+      "Leadership",
+      "Commercial",
+      "Orchestral"
+    ]
+  },
+  {
+    "id": "shop-commercial",
+    "order": 12,
+    "title": "Retail Fashion Launch Ad",
+    "description": "Promotional store showcase with motion typography and quick match cuts.",
+    "category": "Brand & Commercial",
+    "year": "2025",
+    "duration": "00:45",
+    "durationSeconds": 45,
+    "aspectRatio": "9:16",
+    "featured": false,
+    "published": true,
+    "role": "Retail Commercial · Dynamic Motion Typography · Fast Match Cuts",
+    "thumbnailUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207622/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/02_Ads/Shop.jpg",
+    "thumbnail": "https://res.cloudinary.com/hvs5l0qz/video/upload/so_1,q_auto,f_auto/v1793207622/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/02_Ads/Shop.jpg",
+    "videoUrl": "https://res.cloudinary.com/hvs5l0qz/video/upload/q_auto,f_auto/v1793207622/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/02_Ads/Shop.mp4",
+    "videoType": "cloudinary",
+    "isDemoPlaceholder": false,
+    "brief": "Promotional store showcase highlighting apparel displays and store atmosphere.",
+    "overview": "Snappy visual tour of fashion racks, store lighting, and stylish product displays with energetic pacing.",
+    "editingApproach": {
+      "hookStrategy": "Entrance reveal with dynamic animated date graphic.",
+      "pacingAndRhythm": "Brisk rhythm with seamless transitions between outfit sections.",
+      "soundDesign": "Upbeat commercial background track with clean notification badges.",
+      "colorGrading": "Crisp commercial daylight balance with saturated apparel tones."
+    },
+    "tools": [
+      "Premiere Pro",
+      "After Effects"
+    ],
+    "tags": [
+      "Retail",
+      "Fashion Ad",
+      "Store Promo",
+      "Motion Titles"
+    ]
+  }
+]
