@@ -4,20 +4,17 @@ import React from 'react';
 import Image from 'next/image';
 import {
   ArrowUpRight,
-  Clock,
   Film,
-  Layers,
+  Heart,
+  Mic,
+  Palette,
   Sparkles,
-  Terminal,
-  Type,
-  Volume2,
-  Wand2,
-  Zap
+  Tv,
+  Wand2
 } from 'lucide-react';
 import { siteConfig, getWhatsAppUrl } from '@/lib/site-config';
 import ScrollReveal from '@/components/reactbits/ScrollReveal';
 import AnimatedContent from '@/components/reactbits/AnimatedContent';
-import GlassSurface from '@/components/reactbits/GlassSurface';
 
 export default function AboutSection() {
   const directWhatsAppUrl = getWhatsAppUrl(
@@ -27,39 +24,39 @@ export default function AboutSection() {
   const specialties = [
     {
       icon: Sparkles,
-      title: 'Short-Form Reels & Viral Retention',
+      title: 'Short-Form Reels & Shorts',
       description:
-        'Engineering the opening 0–3 seconds with visual curiosity, speed ramps, and audio risers to halt the scroll on Instagram Reels and Shorts.'
+        'Engaging edits with thoughtful pacing, clean transitions, and platform-friendly vertical formatting.'
     },
     {
       icon: Film,
-      title: 'YouTube & Long-Form Video Editing',
+      title: 'YouTube Video Editing',
       description:
-        'Structuring narratives, b-roll placement, multicam switching, and pacing that sustains viewer watch-time throughout full-length episodes.'
+        'Structured edits with clear storytelling, well-paced cuts, and supporting visuals.'
     },
     {
-      icon: Volume2,
-      title: 'Podcast Conversions & Hook Curation',
+      icon: Mic,
+      title: 'Podcast Highlights',
       description:
-        'Extracting high-value segments from podcast episodes with animated kinetic captions and tight conversational trimming.'
+        'Focused clips that bring key moments and conversations to the forefront.'
     },
     {
-      icon: Layers,
-      title: 'Color Correction & Tone Balancing',
+      icon: Palette,
+      title: 'Color Correction & Grading',
       description:
-        'Natural skin tone recovery, shot-to-shot consistency, and foundational color correction using Premiere Pro and DaVinci Resolve.'
+        'Consistent color, balanced exposure, and a polished visual finish.'
     },
     {
-      icon: Type,
-      title: 'Subtitles & Kinetic Captions',
+      icon: Tv,
+      title: 'Promotional Videos',
       description:
-        'Engaging text overlays and dynamic subtitles designed in After Effects and CapCut for viewers browsing on mute.'
+        'Video edits designed to communicate a brand, product, or service clearly.'
     },
     {
-      icon: Clock,
-      title: 'Cinematic & Wedding / Event Highlights',
+      icon: Heart,
+      title: 'Wedding & Event Highlights',
       description:
-        'Emotionally driven aftermovies and event highlight cuts with rhythmic musical beat matching and cinematic flow.'
+        'Memorable edits that bring important moments together through visual storytelling.'
     }
   ];
 
@@ -81,18 +78,18 @@ export default function AboutSection() {
                 <div className="absolute -inset-2 bg-gradient-to-b from-accent/20 via-accent/5 to-transparent rounded-xl blur-xl opacity-50 group-hover:opacity-80 transition duration-500" />
 
                 <div className="relative max-w-[420px] lg:max-w-none mx-auto lg:mx-0 aspect-[3/4] sm:aspect-[4/5] bg-gradient-to-b from-[#151522] via-[#0c0c14] to-[#050508] border border-white/15 rounded-lg overflow-hidden shadow-2xl">
-                  {/* Shefeer's Real Cutout Photograph with Genuine Alpha Transparency */}
+                  {/* Shefeer's Real Photograph - Preserves genuine features and proportions */}
                   <Image
                     src="/assets/shefeer.png"
                     alt="Muhammed Shefeer K - Freelance Video Editor"
                     width={800}
                     height={1000}
                     priority
-                    className="w-full h-full object-cover object-top filter contrast-[1.05] transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+                    className="w-full h-full object-cover object-top filter contrast-[1.04] transition-transform duration-700 ease-out group-hover:scale-[1.02]"
                   />
 
-                  {/* Cinematic gradient shading */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent pointer-events-none" />
+                  {/* Restrained bottom gradient for HUD text legibility - upper body & face remain completely visible */}
+                  <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none" />
 
                   {/* Corner Accent Tick Marks */}
                   <div className="absolute top-3 left-3 text-white/40 font-mono text-xs pointer-events-none">
@@ -115,12 +112,12 @@ export default function AboutSection() {
                   </div>
 
                   {/* Bottom Portrait HUD */}
-                  <div className="absolute bottom-4 inset-x-4 z-10 flex items-end justify-between text-white font-mono text-[10px] bg-black/60 backdrop-blur-sm p-3 rounded border border-white/10">
+                  <div className="absolute bottom-4 inset-x-4 z-10 flex items-end justify-between text-white font-mono text-[10px] bg-black/70 backdrop-blur-md p-3 rounded border border-white/10">
                     <div>
                       <p className="text-accent font-bold tracking-wider text-xs uppercase">
                         Muhammed Shefeer K
                       </p>
-                      <p className="text-white/60 text-[10px]">Freelance Video Editor · 2+ Years Exp</p>
+                      <p className="text-white/60 text-[10px]">Freelance Video Editor</p>
                     </div>
                     <span className="px-2 py-0.5 rounded bg-white/10 text-white/80 font-mono">
                       Kochi, Kerala, IN
@@ -135,7 +132,7 @@ export default function AboutSection() {
                       Confirmed Editing Software Stack
                     </p>
                     <p className="text-[11px] text-white/50 font-mono mt-0.5">
-                      Accurate proficiency levels without exaggeration
+                      Accurate tools and working proficiency levels
                     </p>
                   </div>
 
@@ -187,8 +184,8 @@ export default function AboutSection() {
               <p className="text-xs font-mono tracking-widest text-accent uppercase mb-2">
                 CRAFT & PHILOSOPHY
               </p>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white uppercase font-sans leading-tight">
-                <ScrollReveal baseOpacity={0.3} enableBlur={true}>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight uppercase font-sans leading-tight">
+                <ScrollReveal baseOpacity={0.3} enableBlur={true} className="text-white">
                   TURNING RAW FOOTAGE
                 </ScrollReveal>{' '}
                 <br />
@@ -196,16 +193,16 @@ export default function AboutSection() {
               </h2>
             </div>
 
-            {/* Concise Bio Paragraphs */}
+            {/* Authentic, Client-Focused Bio Copy */}
             <div className="space-y-4 text-sm sm:text-base text-white/80 font-light leading-relaxed">
               <p>
-                I am <span className="text-white font-medium">Muhammed Shefeer K</span>, a freelance video editor with <span className="text-white font-medium">2+ years of experience</span> based in <span className="text-white font-medium">Kochi, Kerala, India</span>, collaborating with Indian and international clients.
+                I’m <span className="text-white font-medium">Muhammed Shefeer K</span>, a freelance video editor based in <span className="text-white font-medium">Kochi, Kerala, India</span>. I help creators and businesses turn raw footage into polished, engaging videos for digital platforms.
               </p>
               <p>
-                In fast-moving feeds, attention is won in the first two seconds and sustained through rhythm, intentional cuts, and emotional connection. I treat raw footage as a canvas, shaping raw clips into cohesive, high-retention visual stories.
+                From short-form reels to longer videos, I focus on strong pacing, thoughtful cuts, clean visuals, and storytelling that keeps the audience interested.
               </p>
-              <p className="text-white/60 text-xs sm:text-sm">
-                Whether cutting high-energy reels, podcast highlights, YouTube videos, or cinematic wedding and event recaps, my focus is always the same: make every frame hold feeling, clarity, and purpose.
+              <p className="text-white/70">
+                Every project has its own story. My goal is to understand your vision and shape the footage into a video that feels clear, intentional, and true to your message.
               </p>
             </div>
 
@@ -216,7 +213,7 @@ export default function AboutSection() {
                   <Wand2 className="w-3.5 h-3.5" /> Editing Specialties
                 </p>
                 <p className="text-xs text-white/50 font-light mt-1">
-                  Core editing disciplines applied to every cut I deliver.
+                  Core editing disciplines tailored to your project requirements.
                 </p>
               </div>
 
@@ -226,17 +223,17 @@ export default function AboutSection() {
                   return (
                     <div
                       key={spec.title}
-                      className="p-4 rounded bg-white/[0.02] border border-white/5 hover:border-white/15 transition-colors space-y-1.5"
+                      className="p-4 rounded-sm bg-white/[0.02] border border-white/10 hover:border-accent/40 transition-colors space-y-2 group"
                     >
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded bg-accent/10 text-accent flex items-center justify-center flex-shrink-0">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-7 h-7 rounded bg-accent/10 border border-accent/20 text-accent flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
                           <Icon className="w-3.5 h-3.5" />
                         </div>
                         <h4 className="text-xs font-semibold text-white tracking-wide">
                           {spec.title}
                         </h4>
                       </div>
-                      <p className="text-[11px] text-white/60 leading-relaxed font-light pl-8">
+                      <p className="text-[12px] text-white/65 leading-relaxed font-light pl-9.5">
                         {spec.description}
                       </p>
                     </div>

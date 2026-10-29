@@ -67,9 +67,9 @@ export const siteConfig: SiteConfig = {
     headline: 'TURNING RAW FOOTAGE INTO STORIES THAT CONNECT.',
     subheadline: 'FREELANCE VIDEO EDITOR · 2+ YEARS EXPERIENCE · KOCHI, KERALA',
     paragraphs: [
-      'I am Muhammed Shefeer K, a freelance video editor with over 2 years of experience based in Kochi, Kerala, India, collaborating with both Indian and international clients.',
-      'I specialize in shaping raw footage into purposeful, high-retention stories across short-form reels, YouTube videos, podcasts, cinematic edits, event highlights, and commercial promos.',
-      'My editing approach pairs thoughtful pacing and seamless continuity with punchy typography and tailored color correction. Every cut is crafted to hold viewer interest and deliver your vision clearly.'
+      'I’m Muhammed Shefeer K, a freelance video editor based in Kochi, Kerala, India. I help creators and businesses turn raw footage into polished, engaging videos for digital platforms.',
+      'From short-form reels to longer videos, I focus on strong pacing, thoughtful cuts, clean visuals, and storytelling that keeps the audience interested.',
+      'Every project has its own story. My goal is to understand your vision and shape the footage into a video that feels clear, intentional, and true to your message.'
     ],
     location: 'Kochi, Kerala, India',
     targetMarket: 'Indian & International Clients',
