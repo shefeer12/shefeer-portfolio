@@ -9,6 +9,7 @@ import SpeakerToggle from '@/components/SpeakerToggle';
 import Grainient from '@/components/reactbits/Grainient';
 import RotatingText from '@/components/reactbits/RotatingText';
 import ScrollReveal from '@/components/reactbits/ScrollReveal';
+import VariableProximity from '@/components/reactbits/VariableProximity';
 
 interface HeroProps {
   onOpenShowreel?: () => void;
@@ -90,16 +91,32 @@ export default function Hero({ onOpenShowreel }: HeroProps) {
             </span>
           </div>
 
-          {/* Oversized Editorial Headline with ScrollReveal */}
+          {/* Oversized Editorial Headline with VariableProximity (Interactive Logo Hover Effect) */}
           <div className="space-y-3">
             <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-[5.5rem] font-black tracking-tighter leading-[0.9] text-white uppercase font-sans drop-shadow-sm">
               <ScrollReveal baseOpacity={0.4} enableBlur={true} blurStrength={3}>
-                I MAKE EVERY FRAME
-              </ScrollReveal>{' '}
-              <br />
-              <span className="text-accent underline decoration-white/10 underline-offset-8">
-                MATTER.
-              </span>
+                <div className="flex flex-col items-start">
+                  {/* Proximity-interactive main phrase: letters dynamically swell and glow orange near cursor */}
+                  <VariableProximity
+                    label="I MAKE EVERY FRAME"
+                    fromFontWeight={800}
+                    toFontWeight={950}
+                    radius={110}
+                    className="text-white tracking-tighter cursor-default"
+                  />
+                  {/* Accent punchline: letters dynamically swell and illuminate near cursor */}
+                  <div className="mt-1 sm:mt-2">
+                    <VariableProximity
+                      label="MATTER."
+                      fromFontWeight={800}
+                      toFontWeight={950}
+                      radius={110}
+                      hoverColor="#ffffff"
+                      className="text-accent tracking-tighter underline decoration-white/10 underline-offset-8 cursor-default"
+                    />
+                  </div>
+                </div>
+              </ScrollReveal>
             </h1>
 
             {/* React Bits: RotatingText for confirmed editing categories */}

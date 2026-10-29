@@ -10,15 +10,24 @@ export interface VariableProximityProps extends React.HTMLAttributes<HTMLDivElem
   radius?: number;
   className?: string;
   letterClassName?: string;
+  hoverColor?: string;
 }
 
+/**
+ * VariableProximity
+ * 
+ * Interactive typography component adapted from React Bits.
+ * Letters dynamically increase font weight and transition to accent color
+ * as the cursor approaches, creating a tactile, magnetic visual effect.
+ */
 export default function VariableProximity({
   label,
-  fromFontWeight = 400,
-  toFontWeight = 900,
-  radius = 80,
+  fromFontWeight = 800,
+  toFontWeight = 950,
+  radius = 90,
   className = '',
   letterClassName = '',
+  hoverColor = 'var(--accent-orange)',
   ...props
 }: VariableProximityProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -26,7 +35,7 @@ export default function VariableProximity({
   const [isPointerFine, setIsPointerFine] = useState(false);
 
   useEffect(() => {
-    // Only enable on desktop devices with fine pointer (mouse/trackpad)
+    // Only enable proximity calculation on desktop devices with fine pointer (mouse/trackpad)
     const mediaQuery = window.matchMedia('(pointer: fine)');
     setIsPointerFine(mediaQuery.matches);
 
@@ -56,7 +65,7 @@ export default function VariableProximity({
             fromFontWeight + proximity * (toFontWeight - fromFontWeight)
           );
           letterEl.style.fontWeight = `${targetWeight}`;
-          letterEl.style.color = proximity > 0.4 ? 'var(--accent-orange)' : '';
+          letterEl.style.color = proximity > 0.35 ? hoverColor : '';
         } else {
           letterEl.style.fontWeight = `${fromFontWeight}`;
           letterEl.style.color = '';
@@ -79,24 +88,41 @@ export default function VariableProximity({
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseleave', handleMouseLeave);
     };
-  }, [isPointerFine, fromFontWeight, toFontWeight, radius]);
+  }, [isPointerFine, fromFontWeight, toFontWeight, radius, hoverColor]);
+
+  // Split by words to preserve natural word-wrap boundaries on responsive viewports
+  const words = label.split(' ');
+  let letterIndexCounter = 0;
 
   return (
     <div
       ref={containerRef}
-      className={cn('inline-flex flex-wrap select-none', className)}
+      className={cn('inline-flex flex-wrap select-none items-baseline', className)}
       {...props}
     >
-      {label.split('').map((letter, i) => (
-        <span
-          key={i}
-          ref={(el) => {
-            letterRefs.current[i] = el;
-          }}
-          className={cn('inline-block transition-colors duration-150', letterClassName)}
-          style={{ fontWeight: fromFontWeight }}
-        >
-          {letter === ' ' ? '\u00A0' : letter}
+      {words.map((word, wordIndex) => (
+        <span key={wordIndex} className="inline-block whitespace-nowrap">
+          {word.split('').map((letter) => {
+            const letterIndex = letterIndexCounter++;
+            return (
+              <span
+                key={letterIndex}
+                ref={(el) => {
+                  letterRefs.current[letterIndex] = el;
+                }}
+                className={cn(
+                  'inline-block transition-colors duration-150',
+                  letterClassName
+                )}
+                style={{ fontWeight: fromFontWeight }}
+              >
+                {letter}
+              </span>
+            );
+          })}
+          {wordIndex < words.length - 1 && (
+            <span className="inline-block">&nbsp;</span>
+          )}
         </span>
       ))}
     </div>

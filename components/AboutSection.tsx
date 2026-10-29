@@ -15,6 +15,7 @@ import {
 import { siteConfig, getWhatsAppUrl } from '@/lib/site-config';
 import ScrollReveal from '@/components/reactbits/ScrollReveal';
 import AnimatedContent from '@/components/reactbits/AnimatedContent';
+import VariableProximity from '@/components/reactbits/VariableProximity';
 
 export default function AboutSection() {
   const directWhatsAppUrl = getWhatsAppUrl(
@@ -185,11 +186,27 @@ export default function AboutSection() {
                 CRAFT & PHILOSOPHY
               </p>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight uppercase font-sans leading-tight">
-                <ScrollReveal baseOpacity={0.3} enableBlur={true} className="text-white">
-                  TURNING RAW FOOTAGE
-                </ScrollReveal>{' '}
-                <br />
-                <span className="text-accent">INTO STORIES THAT CONNECT.</span>
+                <ScrollReveal baseOpacity={0.3} enableBlur={true}>
+                  <div className="flex flex-col items-start">
+                    <VariableProximity
+                      label="TURNING RAW FOOTAGE"
+                      fromFontWeight={800}
+                      toFontWeight={950}
+                      radius={90}
+                      className="text-white tracking-tight cursor-default"
+                    />
+                    <div className="mt-1">
+                      <VariableProximity
+                        label="INTO STORIES THAT CONNECT."
+                        fromFontWeight={800}
+                        toFontWeight={950}
+                        radius={90}
+                        hoverColor="#ffffff"
+                        className="text-accent tracking-tight cursor-default"
+                      />
+                    </div>
+                  </div>
+                </ScrollReveal>
               </h2>
             </div>
 
