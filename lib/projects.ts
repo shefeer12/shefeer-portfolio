@@ -167,13 +167,13 @@ export function getHeroRotationProjects(): Project[] {
 }
 
 /**
- * Returns all published client video projects for the Full Work gallery (12 projects),
- * sorted by their display order.
+ * Returns all published client video projects for the Full Work gallery,
+ * including the featured hero clip, sorted by display order, then by id.
  */
 export function getGalleryProjects(): Project[] {
   return projects
-    .filter((p) => p.published && !p.featured)
-    .sort((a, b) => a.order - b.order);
+    .filter((p) => p.published)
+    .sort((a, b) => a.order - b.order || a.id.localeCompare(b.id));
 }
 
 /**
@@ -182,7 +182,7 @@ export function getGalleryProjects(): Project[] {
 export function getAllProjects(): Project[] {
   return projects
     .filter((p) => p.published)
-    .sort((a, b) => a.order - b.order);
+    .sort((a, b) => a.order - b.order || a.id.localeCompare(b.id));
 }
 
 /**
