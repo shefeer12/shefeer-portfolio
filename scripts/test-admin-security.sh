@@ -4,7 +4,7 @@
 
 set -uo pipefail
 
-BASE_URL="${1:-http://localhost:3000}"
+BASE_URL="${1:-http://localhost:3010}"
 
 # Auto-detect native curl on Windows/WSL if available
 CURL_BIN="curl"
