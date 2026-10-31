@@ -196,22 +196,48 @@ export default function Hero({ onOpenShowreel }: HeroProps) {
         />
       </div>
 
-      {/* Marquee Banner Strip */}
+      {/* Marquee Banner Strip - Continuous single-line scrolling on mobile and desktop */}
       <div className="mt-8 sm:mt-10 w-full border-y border-white/10 bg-white/[0.02] py-3 overflow-hidden select-none relative z-20">
-        <div className="flex items-center justify-around gap-8 text-[11px] font-mono uppercase tracking-[0.25em] text-white/60">
-          <span className="flex items-center gap-2">
-            <span className="text-accent">★</span> TURNING RAW FOOTAGE INTO STORIES THAT CONNECT
-          </span>
-          <span className="hidden sm:flex items-center gap-2">
-            <span className="text-accent">●</span> 2+ YEARS FREELANCE EXPERIENCE
-          </span>
-          <span className="hidden md:flex items-center gap-2">
-            <span className="text-accent">▲</span> INDIAN & INTERNATIONAL CLIENTS
-          </span>
-          <span className="flex items-center gap-2">
-            <span className="text-accent">◆</span> COLOR CORRECTION & SUBTITLES
-          </span>
+        {/* Subtle Edge Fade Masks */}
+        <div className="pointer-events-none absolute left-0 inset-y-0 w-12 bg-gradient-to-r from-[#070709] to-transparent z-10" />
+        <div className="pointer-events-none absolute right-0 inset-y-0 w-12 bg-gradient-to-l from-[#070709] to-transparent z-10" />
+
+        <div className="hero-marquee-track flex gap-10 items-center whitespace-nowrap will-change-transform w-max text-[11px] font-mono uppercase tracking-[0.25em] text-white/70">
+          {[
+            { symbol: '★', text: 'TURNING RAW FOOTAGE INTO STORIES THAT CONNECT' },
+            { symbol: '●', text: '2+ YEARS FREELANCE EXPERIENCE' },
+            { symbol: '▲', text: 'INDIAN & INTERNATIONAL CLIENTS' },
+            { symbol: '◆', text: 'COLOR CORRECTION & SUBTITLES' },
+            { symbol: '★', text: 'TURNING RAW FOOTAGE INTO STORIES THAT CONNECT' },
+            { symbol: '●', text: '2+ YEARS FREELANCE EXPERIENCE' },
+            { symbol: '▲', text: 'INDIAN & INTERNATIONAL CLIENTS' },
+            { symbol: '◆', text: 'COLOR CORRECTION & SUBTITLES' }
+          ].map((item, idx) => (
+            <span key={idx} className="inline-flex items-center gap-2 shrink-0">
+              <span className="text-accent">{item.symbol}</span>
+              <span>{item.text}</span>
+            </span>
+          ))}
         </div>
+
+        <style jsx>{`
+          .hero-marquee-track {
+            animation: hero-marquee-scroll 24s linear infinite;
+          }
+          @keyframes hero-marquee-scroll {
+            0% {
+              transform: translateX(0%);
+            }
+            100% {
+              transform: translateX(-50%);
+            }
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .hero-marquee-track {
+              animation: none;
+            }
+          }
+        `}</style>
       </div>
     </section>
   );
