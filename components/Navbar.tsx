@@ -9,11 +9,28 @@ import GlassSurface from '@/components/reactbits/GlassSurface';
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
+    let lastScrollY = window.scrollY;
+
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      const currentScrollY = window.scrollY;
+      setIsScrolled(currentScrollY > 20);
+
+      if (currentScrollY <= 50) {
+        setIsVisible(true);
+      } else if (currentScrollY > lastScrollY + 12) {
+        // Scrolling down -> hide navbar to focus on video content
+        setIsVisible(false);
+      } else if (currentScrollY < lastScrollY - 12) {
+        // Scrolling up -> restore navbar for effortless navigation
+        setIsVisible(true);
+      }
+
+      lastScrollY = currentScrollY;
     };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -22,7 +39,9 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-40 transition-all duration-300 ${
+      className={`fixed top-0 inset-x-0 z-40 transition-transform duration-300 ease-out ${
+        isVisible || isOpen ? 'translate-y-0' : '-translate-y-full'
+      } ${
         isScrolled
           ? 'bg-[#070709]/85 backdrop-blur-xl border-b border-white/10 py-3.5 shadow-2xl'
           : 'bg-transparent py-5'

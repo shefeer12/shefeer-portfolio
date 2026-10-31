@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import { ArrowUpRight, Film, SlidersHorizontal } from 'lucide-react';
 import { getGalleryProjects, projectCategories, type Project, type ProjectFilterCategory } from '@/lib/projects';
 import ProjectCard from '@/components/ProjectCard';
@@ -14,6 +15,7 @@ interface WorkGalleryProps {
 }
 
 export default function WorkGallery({ onSelectProject }: WorkGalleryProps) {
+  const prefersReducedMotion = useReducedMotion();
   const [selectedCategory, setSelectedCategory] = useState<ProjectFilterCategory>('All Work');
   const galleryProjects = useMemo(() => getGalleryProjects(), []);
 
@@ -100,43 +102,50 @@ export default function WorkGallery({ onSelectProject }: WorkGalleryProps) {
 
         {/* Project Grid: React Bits Masonry with TiltedCard on top featured cards */}
         {filteredProjects.length > 0 ? (
-          <Masonry
-            items={filteredProjects}
-            renderItem={(project, index) => {
-              // Selectively apply 3D TiltedCard to the top featured cards without breaking modal opening
-              const isTiltedFeatured = project.featured && index < 2;
+          <motion.div
+            key={selectedCategory}
+            initial={{ opacity: prefersReducedMotion ? 1 : 0, y: prefersReducedMotion ? 0 : 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.28, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <Masonry
+              items={filteredProjects}
+              renderItem={(project, index) => {
+                // Selectively apply 3D TiltedCard to the top featured cards without breaking modal opening
+                const isTiltedFeatured = project.featured && index < 2;
 
-              if (isTiltedFeatured) {
+                if (isTiltedFeatured) {
+                  return (
+                    <AnimatedContent delay={index * 0.08} duration={0.5}>
+                      <TiltedCard
+                        maxTilt={6}
+                        scaleOnHover={1.02}
+                        glare={true}
+                        glareOpacity={0.18}
+                        onClick={() => onSelectProject(project)}
+                      >
+                        <ProjectCard
+                          project={project}
+                          index={index}
+                          onSelect={onSelectProject}
+                        />
+                      </TiltedCard>
+                    </AnimatedContent>
+                  );
+                }
+
                 return (
-                  <AnimatedContent delay={index * 0.08} duration={0.5}>
-                    <TiltedCard
-                      maxTilt={6}
-                      scaleOnHover={1.02}
-                      glare={true}
-                      glareOpacity={0.18}
-                      onClick={() => onSelectProject(project)}
-                    >
-                      <ProjectCard
-                        project={project}
-                        index={index}
-                        onSelect={onSelectProject}
-                      />
-                    </TiltedCard>
+                  <AnimatedContent delay={index * 0.06} duration={0.5}>
+                    <ProjectCard
+                      project={project}
+                      index={index}
+                      onSelect={onSelectProject}
+                    />
                   </AnimatedContent>
                 );
-              }
-
-              return (
-                <AnimatedContent delay={index * 0.06} duration={0.5}>
-                  <ProjectCard
-                    project={project}
-                    index={index}
-                    onSelect={onSelectProject}
-                  />
-                </AnimatedContent>
-              );
-            }}
-          />
+              }}
+            />
+          </motion.div>
         ) : (
           /* Graceful Empty State */
           <div className="py-20 text-center border border-dashed border-white/15 rounded-lg bg-white/[0.01] p-8">

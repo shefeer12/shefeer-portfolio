@@ -38,7 +38,7 @@ export default function Home() {
   };
 
   const floatingWhatsAppUrl = getWhatsAppUrl(
-    'Hi Shefeer, I am browsing your portfolio and would like to discuss an upcoming video edit.'
+    'Hi Shefeer, I saw your portfolio and want to discuss a video project.'
   );
 
   // Confirmed software and editing capability stack for LogoLoop

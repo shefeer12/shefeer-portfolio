@@ -1,117 +1,126 @@
 'use client';
 
 import React from 'react';
-import { ArrowDownRight, ArrowUpRight, Clapperboard, Film, Sparkles, Wand2, Zap } from 'lucide-react';
+import { ArrowUpRight, Zap } from 'lucide-react';
 import ScrollReveal from '@/components/reactbits/ScrollReveal';
 import AnimatedContent from '@/components/reactbits/AnimatedContent';
 import GlassSurface from '@/components/reactbits/GlassSurface';
+import { getWhatsAppUrl } from '@/lib/site-config';
 
 interface ServiceItem {
   number: string;
   title: string;
-  headline: string;
   description: string;
   deliverables: string[];
-  idealFor: string;
 }
 
+/**
+ * 8 Confirmed Services from SHEFEER_BRIEF.md (Section 10):
+ * 1. Short-form reels and social videos
+ * 2. YouTube editing
+ * 3. Podcast editing and highlights
+ * 4. Color correction and grading
+ * 5. Subtitles and captions
+ * 6. Cinematic edits
+ * 7. Wedding and event highlights
+ * 8. Commercials and promotional videos
+ */
 const services: ServiceItem[] = [
   {
     number: '01',
-    title: 'Short-Form Reels & Viral Edits',
-    headline: 'High-Retention 9:16 Vertical Video',
-    description: 'Hook-driven editing for Instagram Reels, YouTube Shorts, and TikTok. Engineered with punchy pacing, fast match cuts, and audio sync designed to hold viewer attention.',
+    title: 'Short-Form Reels & Social Videos',
+    description: 'Hook-driven cuts for Instagram Reels, YouTube Shorts, and TikTok. Engineered with punchy pacing, thoughtful match cuts, and audio sync designed to hold viewer retention.',
     deliverables: [
-      'Thumb-stopping 0–3s hook optimization',
-      'Dynamic speed ramps & beat-sync cutting',
+      'Hook optimization (0–3s viewer retention)',
+      'Dynamic speed ramps & beat-synced cuts',
       'Tactile sound effects & audio balance',
-      'Native 9:16 vertical exports'
-    ],
-    idealFor: 'Creators, personal brands, founders & agency social channels'
+      'Native 9:16 vertical delivery'
+    ]
   },
   {
     number: '02',
-    title: 'YouTube & Long-Form Video Editing',
-    headline: 'Structured Storytelling & High Watch Time',
-    description: 'Transforming raw A-roll into engaging, well-paced YouTube episodes and long-form content with seamless chapter flow, b-roll placement, and visual graphic support.',
+    title: 'YouTube Editing',
+    description: 'Transforming raw A-roll into engaging, well-paced YouTube videos with structured narrative flow, b-roll placement, and visual rhythm that sustains watch time.',
     deliverables: [
       'Narrative structure & retention trimming',
       'Multicam switching & visual punch-ins',
-      'Engaging b-roll & illustration cut-ins',
-      'Optimized chapter breaks & end-screen flow'
-    ],
-    idealFor: 'YouTubers, educators, founders & long-form creators'
+      'B-roll integration & graphic support',
+      'End-screen flow & chapter markers'
+    ]
   },
   {
     number: '03',
-    title: 'Podcast Editing & Golden Moments',
-    headline: 'Conversational Flow & Social Repurposing',
-    description: 'Trimming pauses and dead air from interview recordings, and extracting high-impact 30–60 second golden moments tailored specifically for vertical feeds.',
+    title: 'Podcast Editing & Highlights',
+    description: 'Trimming pauses and dead air from full-length podcast recordings, and extracting high-impact 30–60 second highlight clips tailored for social feeds.',
     deliverables: [
-      'Dialogue trimming & conversational flow cleanup',
-      'High-impact hook curation from full episodes',
+      'Dialogue cleanup & conversational flow',
+      'Key golden-moment extraction',
       'Word-by-word animated subtitles',
-      'Weekly short-form podcast cut batches'
-    ],
-    idealFor: 'Podcasters, interviewers, keynote speakers & educators'
+      'Batch exports for multi-platform distribution'
+    ]
   },
   {
     number: '04',
-    title: 'Color Correction & Tone Balancing',
-    headline: 'Clean Skin Tones & Visual Consistency',
-    description: 'Shot-to-shot exposure correction, natural skin tone recovery, and foundational color grading using Premiere Pro and DaVinci Resolve for a cohesive, professional look.',
+    title: 'Color Correction & Grading',
+    description: 'Shot-to-shot exposure correction, natural skin tone recovery, and foundational color grading using Premiere Pro and DaVinci Resolve for a cohesive visual look.',
     deliverables: [
       'Exposure leveling & white balance matching',
-      'Natural skin tone recovery & protection',
+      'Natural skin tone protection',
       'Contrast balance & shadow depth tuning',
       'Consistent look across multiple camera angles'
-    ],
-    idealFor: 'Filmmakers, creators, brands & event videographers'
+    ]
   },
   {
     number: '05',
-    title: 'Subtitles, Captions & Motion Graphics',
-    headline: 'Engaging Typography for Silent Feeds',
-    description: 'Kinetic word-by-word subtitles, graphic callouts, animated lower-thirds, and title cards designed in After Effects and CapCut so videos communicate clearly with or without sound.',
+    title: 'Subtitles & Captions',
+    description: 'Kinetic word-by-word captions, graphic callouts, and clean animated lower-thirds so videos communicate clearly with or without sound.',
     deliverables: [
-      'Synchronized kinetic word-by-word captions',
-      'Custom fonts, brand colors & highlight styling',
-      'Animated lower-thirds & graphic callouts',
-      'Visual punch-ins & emoji accents'
-    ],
-    idealFor: 'Shorts, reels, ads, and talking-head videos'
+      'Synchronized kinetic word captions',
+      'Custom fonts & brand styling',
+      'Animated lower-thirds & titles',
+      'Visual emphasis for silent feeds'
+    ]
   },
   {
     number: '06',
-    title: 'Cinematic Edits, Events & Weddings',
-    headline: 'Emotionally Driven Highlights & Recaps',
-    description: 'Crafting memorable, rhythmic aftermovies, wedding highlight recaps, and festival recap films that capture live atmosphere and emotion through music and visual pacing.',
+    title: 'Cinematic Edits',
+    description: 'Atmospheric narrative cuts driven by sound design, visual pacing, and careful music selection for travel films, brand stories, and cinematic showcases.',
     deliverables: [
-      'Music-driven pacing & emotional crescendo',
-      'Cinematic slow-motion & match cutting',
-      'Ambient event audio mixing & crowd sync',
-      'Social cutdowns & full highlight reels'
-    ],
-    idealFor: 'Couples, event organizers, festivals, college fests & videographers'
+      'Music-driven pacing & emotional flow',
+      'Cinematic slow-motion & match cuts',
+      'Soundscape design & ambient audio mixing',
+      'High-bitrate master exports'
+    ]
   },
   {
     number: '07',
-    title: 'Promotional & Commercial Videos',
-    headline: 'Punchy Visual Showcases That Drive Action',
-    description: 'Commercial promos for stores, restaurants, real estate, and lifestyle products. Structured with strong branding, feature callouts, and clean visual presentation.',
+    title: 'Wedding & Event Highlights',
+    description: 'Memorable highlight films, recap aftermovies, and event cutdowns that capture genuine atmosphere, energy, and emotion through thoughtful editing.',
     deliverables: [
-      'Product macro details & atmosphere cuts',
-      'Feature callout titles & price/date badges',
+      'Atmospheric event recap films',
+      'Emotional crescendo & music alignment',
+      'Live audio & speech integration',
+      'Social cutdowns & full recap versions'
+    ]
+  },
+  {
+    number: '08',
+    title: 'Commercials & Promotional Videos',
+    description: 'Promotional videos for brands, products, restaurants, real estate, and lifestyle launches structured with strong visual presentation and clear calls to action.',
+    deliverables: [
+      'Product details & atmospheric framing',
+      'Feature callout titles & brand badges',
       'Upbeat commercial pacing & sound design',
-      'Cross-platform delivery (9:16 vertical & 16:9 widescreen)'
-    ],
-    idealFor: 'Retail brands, restaurants, real estate & business launches'
+      'Cross-platform delivery (9:16 and 16:9)'
+    ]
   }
 ];
 
 export default function ServicesSection() {
+  const quoteWhatsAppUrl = getWhatsAppUrl('Hi Shefeer, I would like to request a quote for video editing.');
+
   return (
-    <section id="services" className="py-24 sm:py-32 relative">
+    <section id="services" className="py-24 sm:py-32 relative border-t border-white/10">
       <div className="site-container">
         {/* Section Heading with ScrollReveal */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 border-b border-white/10 pb-8">
@@ -125,147 +134,121 @@ export default function ServicesSection() {
                 SERVICES
               </ScrollReveal>{' '}
               <br />
-              <span className="text-accent">& OFFERINGS.</span>
+              <span className="text-accent">& CAPABILITIES.</span>
             </h2>
           </div>
 
           <div className="max-w-md">
             <p className="text-sm text-white/70 leading-relaxed font-light">
-              Tailored video editing for creators, brands, and agencies in India and internationally. Every cut is intentional, platform-native, and crafted to connect.
+              Tailored video editing for creators and businesses in India and internationally. Every cut is intentional, platform-native, and crafted to connect.
             </p>
           </div>
         </div>
 
-        {/* Services List with AnimatedContent */}
-        <div className="space-y-6">
+        {/* 8 Services Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {services.map((service, index) => (
             <AnimatedContent
               key={service.number}
               direction="vertical"
-              distance={24}
-              delay={index * 0.06}
-              duration={0.5}
+              distance={20}
+              delay={index * 0.04}
+              duration={0.4}
             >
               <GlassSurface
                 intensity="subtle"
                 glowOnHover
-                className="group p-6 sm:p-8 rounded-sm"
+                className="group p-6 sm:p-7 rounded-sm h-full flex flex-col justify-between border border-white/8 hover:border-accent/40 transition-colors"
               >
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                  {/* Number & Headline */}
-                  <div className="lg:col-span-4 space-y-2">
-                    <span className="text-accent font-mono text-sm font-bold">
+                <div className="space-y-4">
+                  {/* Service Number & Title */}
+                  <div className="flex items-center justify-between border-b border-white/5 pb-3">
+                    <span className="text-accent font-mono text-xs font-bold tracking-widest">
                       {service.number} //
                     </span>
-                    <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight group-hover:text-accent transition-colors">
-                      {service.title}
-                    </h3>
-                    <p className="text-xs font-mono text-white/60 uppercase tracking-wider">
-                      {service.headline}
-                    </p>
+                    <a
+                      href="#contact"
+                      className="text-white/40 group-hover:text-accent transition-colors"
+                      aria-label={`Inquire about ${service.title}`}
+                    >
+                      <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </a>
                   </div>
 
-                  {/* Description & Deliverables */}
-                  <div className="lg:col-span-8 space-y-4">
-                    <p className="text-sm text-white/80 leading-relaxed font-light">
-                      {service.description}
+                  <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight group-hover:text-accent transition-colors">
+                    {service.title}
+                  </h3>
+
+                  <p className="text-xs text-white/70 leading-relaxed font-light">
+                    {service.description}
+                  </p>
+
+                  {/* Deliverables List */}
+                  <div className="pt-2">
+                    <p className="text-[9px] font-mono uppercase tracking-widest text-white/40 mb-2">
+                      INCLUDED IN CUT
                     </p>
-
-                    <div className="pt-2">
-                      <p className="text-[10px] font-mono uppercase tracking-widest text-white/40 mb-2">
-                        CORE DELIVERABLES
-                      </p>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {service.deliverables.map((item) => (
-                          <div
-                            key={item}
-                            className="flex items-center gap-2 text-xs font-mono text-white/70"
-                          >
-                            <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                            <span>{item}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="pt-3 border-t border-white/5 flex flex-wrap items-center justify-between gap-4 text-xs font-mono">
-                      <span className="text-muted">
-                        IDEAL FOR: <span className="text-white/80">{service.idealFor}</span>
-                      </span>
-
-                      <a
-                        href="#contact"
-                        className="inline-flex items-center gap-1.5 text-accent hover:text-white font-semibold transition"
-                      >
-                        <span>Inquire for this service</span>
-                        <ArrowUpRight className="w-3.5 h-3.5" />
-                      </a>
-                    </div>
+                    <ul className="space-y-1.5">
+                      {service.deliverables.map((item) => (
+                        <li
+                          key={item}
+                          className="flex items-center gap-2 text-[11px] font-mono text-white/70"
+                        >
+                          <span className="w-1 h-1 rounded-full bg-accent" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
+                </div>
+
+                <div className="pt-4 mt-4 border-t border-white/5 flex items-center justify-between text-xs font-mono">
+                  <a
+                    href="#contact"
+                    className="inline-flex items-center gap-1.5 text-accent hover:text-white font-semibold transition"
+                  >
+                    <span>Request Quote</span>
+                    <ArrowUpRight className="w-3.5 h-3.5" />
+                  </a>
                 </div>
               </GlassSurface>
             </AnimatedContent>
           ))}
         </div>
 
-        {/* Commercial Terms & Collaboration Guidelines */}
-        <div className="mt-12 p-6 sm:p-8 rounded-sm bg-white/[0.02] border border-white/10 space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
-            <div>
-              <p className="text-[10px] font-mono uppercase tracking-widest text-accent">
-                COMMERCIAL TERMS & COLLABORATION
-              </p>
-              <h3 className="text-lg font-bold text-white tracking-tight mt-0.5">
-                Transparent Working Guidelines
-              </h3>
-            </div>
-            <span className="text-xs font-mono text-white/50 px-2.5 py-1 bg-white/5 rounded border border-white/10 self-start sm:self-auto">
-              Currency: INR (₹)
+        {/* 
+          Approved Pricing Notice:
+          "Pricing is based on a quotation. Contact for a quote."
+          Unconfirmed revision, timeline, and rush policies omitted per brief rules until Shefeer approves.
+        */}
+        <div className="mt-12 p-6 sm:p-8 rounded-sm bg-white/[0.02] border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div className="space-y-1">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-accent font-semibold block">
+              PRICING & COMMERCIAL TERMS
             </span>
+            <p className="text-base sm:text-lg font-medium text-white tracking-tight">
+              Pricing is based on a quotation. Contact for a quote.
+            </p>
+            <p className="text-xs text-white/60 font-light font-mono">
+              Every edit is scoped individually based on footage length, turnaround, and narrative complexity.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs font-mono">
-            <div className="p-3.5 bg-white/[0.02] border border-white/5 rounded space-y-1">
-              <span className="text-accent font-semibold block">CUSTOM QUOTES</span>
-              <p className="text-white/70 font-light leading-relaxed">
-                No rigid fixed pricing. Every project receives a tailored quote based on footage volume, turnaround, and creative complexity.
-              </p>
-            </div>
-
-            <div className="p-3.5 bg-white/[0.02] border border-white/5 rounded space-y-1">
-              <span className="text-accent font-semibold block">2 REVISION ROUNDS</span>
-              <p className="text-white/70 font-light leading-relaxed">
-                Two rounds of revisions are included with every edit to fine-tune pacing, titles, music sync, and color adjustments.
-              </p>
-            </div>
-
-            <div className="p-3.5 bg-white/[0.02] border border-white/5 rounded space-y-1">
-              <span className="text-accent font-semibold block">INDIVIDUAL TIMELINES</span>
-              <p className="text-white/70 font-light leading-relaxed">
-                Delivery schedules are agreed individually after reviewing your raw footage and project scope.
-              </p>
-            </div>
-
-            <div className="p-3.5 bg-white/[0.02] border border-white/5 rounded space-y-1">
-              <span className="text-accent font-semibold block">RUSH PROJECTS</span>
-              <p className="text-white/70 font-light leading-relaxed">
-                Accelerated turnaround edits are accepted subject to current schedule and availability.
-              </p>
-            </div>
-
-            <div className="p-3.5 bg-white/[0.02] border border-white/5 rounded space-y-1">
-              <span className="text-accent font-semibold block">PAYMENT TERMS</span>
-              <p className="text-white/70 font-light leading-relaxed">
-                Payment milestones are agreed with each client prior to starting post-production.
-              </p>
-            </div>
-
-            <div className="p-3.5 bg-white/[0.02] border border-white/5 rounded space-y-1">
-              <span className="text-accent font-semibold block">INDIAN & GLOBAL CLIENTS</span>
-              <p className="text-white/70 font-light leading-relaxed">
-                Seamless remote workflow using Google Drive, Dropbox, or Frame.io for effortless footage handoff.
-              </p>
-            </div>
+          <div className="flex flex-wrap items-center gap-3 flex-shrink-0">
+            <a
+              href="#contact"
+              className="px-5 py-2.5 bg-accent text-black font-semibold text-xs font-mono uppercase tracking-wider rounded hover:bg-accent-hover transition shadow-lg shadow-accent/20"
+            >
+              Contact for a quote
+            </a>
+            <a
+              href={quoteWhatsAppUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="px-5 py-2.5 bg-white/5 hover:bg-white/10 text-white border border-white/10 text-xs font-mono uppercase tracking-wider rounded transition"
+            >
+              WhatsApp Quote
+            </a>
           </div>
         </div>
       </div>

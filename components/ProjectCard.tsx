@@ -93,6 +93,7 @@ export default function ProjectCard({ project, index, onSelect }: ProjectCardPro
   return (
     <article
       ref={cardRef}
+      data-cursor-label="PLAY"
       className="group relative flex flex-col cursor-pointer bg-card/60 border border-white/8 hover:border-accent/40 rounded-sm overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-accent/5 hover:-translate-y-1"
       onClick={() => onSelect(project)}
       onMouseEnter={handleMouseEnter}

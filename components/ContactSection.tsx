@@ -18,7 +18,7 @@ import GlassSurface from '@/components/reactbits/GlassSurface';
 
 export default function ContactSection() {
   const { contact } = siteConfig;
-  const directWhatsAppUrl = getWhatsAppUrl('Hi Shefeer, I would like to discuss a video editing project.');
+  const directWhatsAppUrl = getWhatsAppUrl('Hi Shefeer, I saw your portfolio and want to discuss a video project.');
   const directMailtoUrl = getMailtoUrl('Video Editing Project Inquiry — Shefeer Portfolio');
 
   return (
