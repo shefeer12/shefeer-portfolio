@@ -44,8 +44,37 @@ export default function AdminPage() {
   const [loadingProjects, setLoadingProjects] = useState(true);
   const [diagnostics, setDiagnostics] = useState<{
     cloudinary?: { configured: boolean; cloudName: string };
-    github?: { isConfigured: boolean; owner?: string; repo?: string; branch?: string; hasToken: boolean };
+    github?: {
+      mode: 'GitHub' | 'Local';
+      isConfigured: boolean;
+      isProduction: boolean;
+      owner?: string;
+      repo?: string;
+      branch: string;
+      variables?: {
+        GITHUB_TOKEN: 'set' | 'missing';
+        GITHUB_OWNER: 'set' | 'missing';
+        GITHUB_REPO: 'set' | 'missing';
+        GITHUB_BRANCH: 'set' | 'missing';
+      };
+      missingRequired?: string[];
+    };
   }>({});
+
+  // GitHub connection test state
+  const [isTestingGitHub, setIsTestingGitHub] = useState(false);
+  const [gitHubTestResult, setGitHubTestResult] = useState<{
+    success: boolean;
+    step: string;
+    message: string;
+    details?: {
+      owner?: string;
+      repo?: string;
+      branch?: string;
+      hasWritePermission?: boolean;
+      fileSha?: string;
+    };
+  } | null>(null);
 
   // Notification banners
   const [notification, setNotification] = useState<{
@@ -122,6 +151,26 @@ export default function AdminPage() {
       console.error('Failed to load projects:', err);
     } finally {
       setLoadingProjects(false);
+    }
+  };
+
+  const handleTestGitHubConnection = async () => {
+    setIsTestingGitHub(true);
+    setGitHubTestResult(null);
+    try {
+      const res = await fetch('/api/admin/auth/me?action=test-github', {
+        method: 'POST'
+      });
+      const data = await res.json();
+      setGitHubTestResult(data);
+    } catch (err) {
+      setGitHubTestResult({
+        success: false,
+        step: 'network',
+        message: 'Network error: Failed to contact server to run GitHub diagnostic test.'
+      });
+    } finally {
+      setIsTestingGitHub(false);
     }
   };
 
@@ -340,9 +389,14 @@ export default function AdminPage() {
       const data = await res.json();
 
       if (res.ok && data.success) {
+        const commitMsg =
+          data.publish?.commitUrl || data.publish?.mode === 'github'
+            ? 'Saved and committed. The live site updates in about 1 to 2 minutes.'
+            : data.publish?.message || 'Saved to local data/projects.json (Development Mode).';
+
         setNotification({
           type: 'success',
-          message: data.publish?.message || 'Project created and saved successfully!',
+          message: commitMsg,
           commitUrl: data.publish?.commitUrl
         });
 
@@ -390,9 +444,13 @@ export default function AdminPage() {
         setProjects((prev) =>
           prev.map((p) => (p.id === project.id ? { ...p, published: updatedStatus } : p))
         );
+        const commitMsg =
+          data.publish?.commitUrl || data.publish?.mode === 'github'
+            ? 'Saved and committed. The live site updates in about 1 to 2 minutes.'
+            : `Project "${project.title}" ${updatedStatus ? 'published' : 'hidden'}.`;
         setNotification({
           type: 'success',
-          message: `Project "${project.title}" ${updatedStatus ? 'published' : 'hidden'}. ${data.publish?.message || ''}`,
+          message: commitMsg,
           commitUrl: data.publish?.commitUrl
         });
       }
@@ -423,19 +481,30 @@ export default function AdminPage() {
     setProjects(newProjects);
 
     try {
-      await fetch(`/api/admin/projects/${project.id}`, {
+      const res1 = await fetch(`/api/admin/projects/${project.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ order: targetProject.order })
       });
-      await fetch(`/api/admin/projects/${targetProject.id}`, {
+      const data1 = await res1.json().catch(() => ({}));
+
+      const res2 = await fetch(`/api/admin/projects/${targetProject.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ order: tempOrder })
       });
+      const data2 = await res2.json().catch(() => ({}));
+
+      const commitUrl = data2.publish?.commitUrl || data1.publish?.commitUrl;
+      const isGitHub = data2.publish?.mode === 'github' || data1.publish?.mode === 'github';
+
       setNotification({
         type: 'success',
-        message: `Updated display order for "${project.title}".`
+        message:
+          commitUrl || isGitHub
+            ? 'Saved and committed. The live site updates in about 1 to 2 minutes.'
+            : `Updated display order for "${project.title}".`,
+        commitUrl
       });
     } catch {
       fetchProjects();
@@ -461,9 +530,13 @@ export default function AdminPage() {
 
       if (res.ok && data.success) {
         setProjects((prev) => prev.filter((p) => p.id !== project.id));
+        const commitMsg =
+          data.publish?.commitUrl || data.publish?.mode === 'github'
+            ? 'Saved and committed. The live site updates in about 1 to 2 minutes.'
+            : `Project "${project.title}" deleted.`;
         setNotification({
           type: 'success',
-          message: `Project "${project.title}" deleted. ${data.publish?.message || ''}`,
+          message: commitMsg,
           commitUrl: data.publish?.commitUrl
         });
       } else {
@@ -493,9 +566,13 @@ export default function AdminPage() {
           prev.map((p) => (p.id === editingProject.id ? data.project : p))
         );
         setEditingProject(null);
+        const commitMsg =
+          data.publish?.commitUrl || data.publish?.mode === 'github'
+            ? 'Saved and committed. The live site updates in about 1 to 2 minutes.'
+            : `Project "${data.project.title}" updated successfully.`;
         setNotification({
           type: 'success',
-          message: `Project "${data.project.title}" updated successfully! ${data.publish?.message || ''}`,
+          message: commitMsg,
           commitUrl: data.publish?.commitUrl
         });
       } else {
@@ -642,8 +719,10 @@ export default function AdminPage() {
               <Github className="w-3.5 h-3.5 text-accent" />
               <span>
                 {diagnostics.github?.isConfigured
-                  ? `GitHub Sync: ${diagnostics.github.branch}`
-                  : 'Local JSON Mode'}
+                  ? `GitHub Mode (${diagnostics.github.branch})`
+                  : diagnostics.github?.isProduction
+                  ? 'GitHub Mode (Missing Config)'
+                  : 'Local File Mode'}
               </span>
             </div>
 
@@ -698,7 +777,7 @@ export default function AdminPage() {
                     rel="noreferrer"
                     className="inline-flex items-center gap-1 text-[11px] underline underline-offset-2 hover:text-white"
                   >
-                    <span>View GitHub Commit & Vercel Build Trigger</span>
+                    <span>View commit on GitHub</span>
                     <ArrowUpRight className="w-3 h-3" />
                   </a>
                 )}
@@ -1339,27 +1418,153 @@ export default function AdminPage() {
                 </div>
 
                 {/* GitHub Box */}
-                <div className="p-4 rounded bg-white/[0.02] border border-white/10 space-y-3">
+                <div className="p-4 rounded bg-white/[0.02] border border-white/10 space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-white">2. GitHub & Vercel Auto-Deploy</span>
+                    <span className="font-bold text-white">2. GitHub & Vercel Publishing</span>
                     {diagnostics.github?.isConfigured ? (
-                      <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] flex items-center gap-1">
-                        <Check className="w-3 h-3" /> Active
+                      <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] flex items-center gap-1 font-semibold">
+                        <Check className="w-3 h-3" /> GitHub Mode
+                      </span>
+                    ) : diagnostics.github?.isProduction ? (
+                      <span className="px-2 py-0.5 rounded bg-red-500/20 text-red-300 text-[10px] font-semibold">
+                        Missing Configuration
                       </span>
                     ) : (
-                      <span className="px-2 py-0.5 rounded bg-white/10 text-white/60 text-[10px]">
+                      <span className="px-2 py-0.5 rounded bg-white/10 text-white/70 text-[10px] font-semibold">
                         Local File Mode
                       </span>
                     )}
                   </div>
-                  <p className="text-white/60 text-[11px] leading-relaxed">
-                    Repository: <code className="text-accent">{diagnostics.github?.owner}/{diagnostics.github?.repo || 'local'}</code>
-                    <br />
-                    Branch: <code className="text-white/80">{diagnostics.github?.branch}</code>
-                  </p>
-                  <p className="text-white/40 text-[10px]">
-                    When GITHUB_TOKEN is set, changes commit directly to the repository so Vercel deploys updates automatically.
-                  </p>
+
+                  {/* Mode & Target Info */}
+                  <div className="space-y-1 text-[11px] leading-relaxed">
+                    <p className="text-white/70">
+                      Operating Mode:{' '}
+                      <code className="text-accent font-bold">
+                        {diagnostics.github?.mode === 'GitHub'
+                          ? 'GitHub Publishing'
+                          : 'Local File Mode (Development)'}
+                      </code>
+                    </p>
+                    <p className="text-white/60">
+                      Repository:{' '}
+                      <code className="text-white/90">
+                        {diagnostics.github?.owner && diagnostics.github?.repo
+                          ? `${diagnostics.github.owner}/${diagnostics.github.repo}`
+                          : 'Not configured'}
+                      </code>
+                    </p>
+                    <p className="text-white/60">
+                      Branch: <code className="text-white/80">{diagnostics.github?.branch || 'main'}</code>
+                    </p>
+                  </div>
+
+                  {/* Environment Variables Checklist (Variable names only, never values) */}
+                  <div className="pt-2 border-t border-white/10 space-y-2">
+                    <p className="text-[10px] uppercase tracking-wider text-white/50 font-semibold">
+                      Required Environment Variables:
+                    </p>
+                    <div className="grid grid-cols-2 gap-2 text-[11px]">
+                      <div className="flex items-center justify-between p-2 rounded bg-black/40 border border-white/5">
+                        <span className="text-white/70">GITHUB_TOKEN</span>
+                        <span
+                          className={`text-[10px] px-1.5 py-0.5 rounded uppercase font-semibold ${
+                            diagnostics.github?.variables?.GITHUB_TOKEN === 'set'
+                              ? 'bg-emerald-500/20 text-emerald-400'
+                              : 'bg-red-500/20 text-red-400'
+                          }`}
+                        >
+                          {diagnostics.github?.variables?.GITHUB_TOKEN || 'missing'}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between p-2 rounded bg-black/40 border border-white/5">
+                        <span className="text-white/70">GITHUB_OWNER</span>
+                        <span
+                          className={`text-[10px] px-1.5 py-0.5 rounded uppercase font-semibold ${
+                            diagnostics.github?.variables?.GITHUB_OWNER === 'set'
+                              ? 'bg-emerald-500/20 text-emerald-400'
+                              : 'bg-red-500/20 text-red-400'
+                          }`}
+                        >
+                          {diagnostics.github?.variables?.GITHUB_OWNER || 'missing'}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between p-2 rounded bg-black/40 border border-white/5">
+                        <span className="text-white/70">GITHUB_REPO</span>
+                        <span
+                          className={`text-[10px] px-1.5 py-0.5 rounded uppercase font-semibold ${
+                            diagnostics.github?.variables?.GITHUB_REPO === 'set'
+                              ? 'bg-emerald-500/20 text-emerald-400'
+                              : 'bg-red-500/20 text-red-400'
+                          }`}
+                        >
+                          {diagnostics.github?.variables?.GITHUB_REPO || 'missing'}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between p-2 rounded bg-black/40 border border-white/5">
+                        <span className="text-white/70">GITHUB_BRANCH</span>
+                        <span
+                          className={`text-[10px] px-1.5 py-0.5 rounded uppercase font-semibold ${
+                            diagnostics.github?.variables?.GITHUB_BRANCH === 'set'
+                              ? 'bg-emerald-500/20 text-emerald-400'
+                              : 'bg-white/10 text-white/50'
+                          }`}
+                        >
+                          {diagnostics.github?.variables?.GITHUB_BRANCH || 'default (main)'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Read-Only Test Connection Button */}
+                  <div className="pt-2 border-t border-white/10 space-y-2">
+                    <button
+                      type="button"
+                      onClick={handleTestGitHubConnection}
+                      disabled={isTestingGitHub}
+                      className="w-full py-2 px-3 rounded bg-accent/15 hover:bg-accent/25 border border-accent/40 text-accent font-semibold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 disabled:opacity-50"
+                    >
+                      {isTestingGitHub ? (
+                        <>
+                          <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                          <span>Testing Connection (Read-Only)...</span>
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span>Test GitHub Connection</span>
+                        </>
+                      )}
+                    </button>
+
+                    {/* Test Result Display */}
+                    {gitHubTestResult && (
+                      <div
+                        className={`p-3 rounded text-xs leading-relaxed space-y-1 ${
+                          gitHubTestResult.success
+                            ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-300'
+                            : 'bg-red-500/10 border border-red-500/30 text-red-300'
+                        }`}
+                      >
+                        <div className="flex items-start gap-2">
+                          {gitHubTestResult.success ? (
+                            <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                          ) : (
+                            <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+                          )}
+                          <div>
+                            <p className="font-bold">
+                              {gitHubTestResult.success ? 'Connection Successful' : `Step Failed: ${gitHubTestResult.step}`}
+                            </p>
+                            <p className="text-[11px] opacity-90">{gitHubTestResult.message}</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 

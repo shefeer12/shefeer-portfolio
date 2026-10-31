@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSessionFromRequest } from '@/lib/auth';
 import { isCloudinaryServerConfigured } from '@/lib/cloudinary-server';
-import { getGitHubConfigStatus } from '@/lib/github';
+import { getGitHubConfigStatus, testGitHubConnection } from '@/lib/github';
 
 export async function GET(request: Request) {
   const session = getSessionFromRequest(request);
@@ -11,6 +11,12 @@ export async function GET(request: Request) {
       { authenticated: false },
       { status: 401 }
     );
+  }
+
+  const { searchParams } = new URL(request.url);
+  if (searchParams.get('action') === 'test-github') {
+    const testResult = await testGitHubConnection();
+    return NextResponse.json(testResult);
   }
 
   const cloudinaryConfigured = isCloudinaryServerConfigured();
@@ -30,4 +36,18 @@ export async function GET(request: Request) {
       github: githubStatus
     }
   });
+}
+
+export async function POST(request: Request) {
+  const session = getSessionFromRequest(request);
+
+  if (!session) {
+    return NextResponse.json(
+      { error: 'Unauthorized.' },
+      { status: 401 }
+    );
+  }
+
+  const testResult = await testGitHubConnection();
+  return NextResponse.json(testResult);
 }
