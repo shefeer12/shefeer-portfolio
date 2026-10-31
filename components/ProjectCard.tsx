@@ -17,10 +17,8 @@ export default function ProjectCard({ project, index, onSelect }: ProjectCardPro
     project.thumbnail ||
     (project.cloudinaryPublicId ? getCloudinaryVideoPosterUrl(project.cloudinaryPublicId) : '');
 
-  const displayNumber =
-    project.order !== undefined && project.order > 0
-      ? String(project.order).padStart(2, '0')
-      : String(index + 1).padStart(2, '0');
+  // Display card's position in displayed list (01, 02, 03...), never raw order value
+  const displayNumber = String(index + 1).padStart(2, '0');
 
   return (
     <article
