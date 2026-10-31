@@ -51,7 +51,7 @@ export default function Navbar() {
         </a>
 
         {/* Desktop Navigation Links horizontally balanced */}
-        <nav className="hidden md:flex items-center gap-5 lg:gap-8 xl:gap-10 text-xs font-mono tracking-wider uppercase">
+        <nav className="hidden lg:flex items-center gap-6 xl:gap-10 text-xs font-mono tracking-wider uppercase">
           <a
             href="#work"
             className="text-white/70 hover:text-accent transition-colors py-1 flex items-center gap-1.5"
@@ -85,7 +85,7 @@ export default function Navbar() {
         </nav>
 
         {/* Right CTA positioned near right responsive gutter */}
-        <div className="hidden sm:flex items-center gap-4 flex-shrink-0">
+        <div className="hidden lg:flex items-center gap-4 flex-shrink-0">
           <GlassSurface intensity="subtle" glowOnHover>
             <a
               href="#contact"
@@ -98,7 +98,7 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Menu Button */}
-        <div className="flex items-center gap-3 md:hidden">
+        <div className="flex items-center gap-3 lg:hidden">
           <a
             href="#contact"
             className="px-3 py-1.5 rounded-sm bg-accent text-black text-[11px] font-mono tracking-wider font-semibold uppercase"
