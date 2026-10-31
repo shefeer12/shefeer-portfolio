@@ -77,6 +77,62 @@ export function checkRateLimit(
 }
 
 /**
+ * Checks whether an identifier is currently blocked by rate limiting without mutating state.
+ */
+export function isRateLimited(identifier: string, maxRequests: number): boolean {
+  const now = Date.now();
+  const existing = store.get(identifier);
+  if (!existing || existing.resetAt <= now) {
+    return false;
+  }
+  return existing.count >= maxRequests;
+}
+
+/**
+ * Records a failed attempt for an identifier.
+ */
+export function recordFailedAttempt(
+  identifier: string,
+  windowSeconds: number,
+  maxRequests = 5
+): RateLimitResult {
+  const now = Date.now();
+  const windowMs = windowSeconds * 1000;
+  const existing = store.get(identifier);
+
+  if (!existing || existing.resetAt <= now) {
+    const record: RateLimitRecord = {
+      count: 1,
+      resetAt: now + windowMs
+    };
+    store.set(identifier, record);
+    return {
+      success: true,
+      limit: maxRequests,
+      remaining: maxRequests - 1,
+      resetAt: record.resetAt
+    };
+  }
+
+  existing.count += 1;
+  const isAllowed = existing.count < maxRequests;
+  return {
+    success: isAllowed,
+    limit: maxRequests,
+    remaining: Math.max(0, maxRequests - existing.count),
+    resetAt: existing.resetAt,
+    retryAfterSeconds: Math.max(1, Math.ceil((existing.resetAt - now) / 1000))
+  };
+}
+
+/**
+ * Resets rate limit for an identifier (e.g. upon successful authentication).
+ */
+export function resetRateLimit(identifier: string): void {
+  store.delete(identifier);
+}
+
+/**
  * Helper to get a stable client IP from Next.js request headers.
  */
 export function getClientIp(headers: Headers): string {

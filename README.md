@@ -124,6 +124,14 @@ shefeer-portfolio/
 
 ---
 
+## 🔐 Admin Security & Session Secret Rotation
+
+The `/admin` dashboard uses HMAC-SHA256 session tokens stored in an `HttpOnly`, `SameSite=Lax`, `Secure` (in production) cookie.
+
+> **Important:** Rotating or changing `ADMIN_SESSION_SECRET` in environment variables immediately invalidates all active session tokens and signs everyone out instantly across all browsers and devices.
+
+---
+
 ## 🚢 Deploying to Vercel
 
 1. Push this repository to GitHub.

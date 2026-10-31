@@ -5,19 +5,24 @@ import {
   getSessionCookieOptions,
   verifyAdminPassword
 } from '@/lib/auth';
-import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
+import {
+  getClientIp,
+  isRateLimited,
+  recordFailedAttempt,
+  resetRateLimit
+} from '@/lib/rate-limit';
 
 export async function POST(request: Request) {
   try {
     const ip = getClientIp(request.headers);
+    const failKey = `login-fail:${ip}`;
 
-    // Rate limit: Max 5 failed attempts per 15 minutes per IP
-    const rateLimit = checkRateLimit(`login:${ip}`, 5, 15 * 60);
-    if (!rateLimit.success) {
+    // Rate limit: at most 5 failed attempts per IP per 15 minutes (900 seconds)
+    // Serverless Note: In-memory store operates per lambda instance. In multi-instance or high cold-start
+    // serverless deployments, an external state store (e.g. Upstash Redis) provides distributed enforcement.
+    if (isRateLimited(failKey, 5)) {
       return NextResponse.json(
-        {
-          error: `Too many login attempts. Please try again in ${rateLimit.retryAfterSeconds} seconds.`
-        },
+        { error: 'Incorrect password.' },
         { status: 429 }
       );
     }
@@ -26,20 +31,25 @@ export async function POST(request: Request) {
     const { password } = body;
 
     if (!password || typeof password !== 'string') {
+      recordFailedAttempt(failKey, 15 * 60, 5);
       return NextResponse.json(
-        { error: 'Password is required.' },
-        { status: 400 }
+        { error: 'Incorrect password.' },
+        { status: 401 }
       );
     }
 
     const isValid = verifyAdminPassword(password.trim());
 
     if (!isValid) {
+      recordFailedAttempt(failKey, 15 * 60, 5);
       return NextResponse.json(
-        { error: 'Invalid admin credentials.' },
+        { error: 'Incorrect password.' },
         { status: 401 }
       );
     }
+
+    // Reset failed counter upon successful login
+    resetRateLimit(failKey);
 
     // Generate secure session token (valid for 7 days)
     const token = createSessionToken('shefeer', 7 * 24 * 3600);
@@ -55,7 +65,7 @@ export async function POST(request: Request) {
   } catch (err) {
     console.error('Admin login error:', err);
     return NextResponse.json(
-      { error: 'An unexpected authentication error occurred.' },
+      { error: 'Incorrect password.' },
       { status: 500 }
     );
   }

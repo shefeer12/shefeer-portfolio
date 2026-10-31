@@ -1,12 +1,9 @@
 import { NextResponse } from 'next/server';
-import { getSessionFromRequest } from '@/lib/auth';
-import {
-  isValidAspectRatio,
-  type Project,
-  type ProjectCategory
-} from '@/lib/projects';
+import { requireAdminSession } from '@/lib/auth';
+import { type Project, type ProjectCategory } from '@/lib/projects';
 import { mutateProjectsAndPublish, loadProjects } from '@/lib/github';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
+import { validateProjectPayload } from '@/lib/project-schema';
 
 /**
  * Generates a clean URL slug from a title.
@@ -24,13 +21,21 @@ function slugify(text: string): string {
  * GET: Retrieve all projects from GitHub (in production) or data/projects.json (in development).
  */
 export async function GET(request: Request) {
-  const session = getSessionFromRequest(request);
-  if (!session) {
-    return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
+  const auth = requireAdminSession(request);
+  if (auth.errorResponse) {
+    return auth.errorResponse;
   }
 
-  const projects = await loadProjects();
-  return NextResponse.json({ success: true, projects });
+  try {
+    const projects = await loadProjects();
+    return NextResponse.json({ success: true, projects });
+  } catch (err) {
+    console.error('[Admin Projects GET Error]:', err instanceof Error ? err.message : 'Unknown error');
+    return NextResponse.json(
+      { error: 'Failed to retrieve projects list.' },
+      { status: 500 }
+    );
+  }
 }
 
 /**
@@ -38,22 +43,32 @@ export async function GET(request: Request) {
  * Uses atomic in-memory mutation and commit to GitHub contents API with conflict retry.
  */
 export async function POST(request: Request) {
-  const session = getSessionFromRequest(request);
-  if (!session) {
-    return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
+  const auth = requireAdminSession(request);
+  if (auth.errorResponse) {
+    return auth.errorResponse;
   }
 
   const ip = getClientIp(request.headers);
   const rateLimit = checkRateLimit(`project-mutate:${ip}`, 40, 10 * 60);
   if (!rateLimit.success) {
     return NextResponse.json(
-      { error: `Rate limit reached. Please wait ${rateLimit.retryAfterSeconds}s.` },
+      { error: 'Rate limit exceeded. Please wait a moment before trying again.' },
       { status: 429 }
     );
   }
 
   try {
-    const body = await request.json();
+    const body = await request.json().catch(() => null);
+
+    // Schema validation (title, category, aspect ratio, integer order, tag limits, URL allowlist, unknown fields)
+    const validation = validateProjectPayload(body, false);
+    if (!validation.valid) {
+      return NextResponse.json(
+        { error: validation.errors.join(' ') },
+        { status: 400 }
+      );
+    }
+
     const {
       title,
       description,
@@ -75,25 +90,9 @@ export async function POST(request: Request) {
       published = true
     } = body;
 
-    // 1. Validation
-    if (!title || typeof title !== 'string' || title.trim() === '') {
-      return NextResponse.json({ error: 'Project title is required.' }, { status: 400 });
-    }
-
-    if (!videoUrl || typeof videoUrl !== 'string' || videoUrl.trim() === '') {
-      return NextResponse.json({ error: 'Video delivery URL is required.' }, { status: 400 });
-    }
-
     const validThumbnail = thumbnailUrl || videoUrl.replace(/\.(mp4|mov|webm)$/i, '.jpg');
 
-    if (!isValidAspectRatio(aspectRatio)) {
-      return NextResponse.json(
-        { error: 'Invalid aspect ratio format. Use "9:16", "16:9", "1:1", "4:5", etc.' },
-        { status: 400 }
-      );
-    }
-
-    // 2. Execute mutation with GitHub commit & conflict retry
+    // Execute mutation with GitHub commit & conflict retry
     const publishResult = await mutateProjectsAndPublish((currentProjects) => {
       // Generate unique slug ID against fresh currentProjects
       let slug = body.id ? slugify(body.id) : slugify(title);
@@ -151,8 +150,9 @@ export async function POST(request: Request) {
     });
 
     if (!publishResult.success) {
+      console.error('[Admin Project Create Publish Failure]:', publishResult.error || publishResult.message);
       return NextResponse.json(
-        { error: publishResult.error || publishResult.message },
+        { error: 'Failed to publish project to repository.' },
         { status: 500 }
       );
     }
@@ -163,8 +163,10 @@ export async function POST(request: Request) {
       publish: publishResult
     });
   } catch (err) {
-    console.error('Create project error:', err);
-    const msg = err instanceof Error ? err.message : 'Failed to create project.';
-    return NextResponse.json({ error: msg }, { status: 500 });
+    console.error('[Admin Project Create Error]:', err instanceof Error ? err.message : 'Unknown error');
+    return NextResponse.json(
+      { error: 'An unexpected error occurred while saving the project.' },
+      { status: 500 }
+    );
   }
 }

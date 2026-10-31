@@ -1,17 +1,14 @@
 import { NextResponse } from 'next/server';
-import { getSessionFromRequest } from '@/lib/auth';
+import { requireAdminSession } from '@/lib/auth';
 import { isCloudinaryServerConfigured } from '@/lib/cloudinary-server';
 import { getGitHubConfigStatus, testGitHubConnection } from '@/lib/github';
 
 export async function GET(request: Request) {
-  const session = getSessionFromRequest(request);
-
-  if (!session) {
-    return NextResponse.json(
-      { authenticated: false },
-      { status: 401 }
-    );
+  const auth = requireAdminSession(request);
+  if (auth.errorResponse) {
+    return auth.errorResponse;
   }
+  const session = auth.session;
 
   const { searchParams } = new URL(request.url);
   if (searchParams.get('action') === 'test-github') {
@@ -39,13 +36,9 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const session = getSessionFromRequest(request);
-
-  if (!session) {
-    return NextResponse.json(
-      { error: 'Unauthorized.' },
-      { status: 401 }
-    );
+  const auth = requireAdminSession(request);
+  if (auth.errorResponse) {
+    return auth.errorResponse;
   }
 
   const testResult = await testGitHubConnection();

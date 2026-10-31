@@ -1,10 +1,35 @@
 import { NextResponse } from 'next/server';
-import { getSessionFromRequest } from '@/lib/auth';
-import { isValidAspectRatio, type Project } from '@/lib/projects';
-import { mutateProjectsAndPublish } from '@/lib/github';
+import { requireAdminSession } from '@/lib/auth';
+import { type Project } from '@/lib/projects';
+import { mutateProjectsAndPublish, loadProjects } from '@/lib/github';
+import { validateProjectPayload } from '@/lib/project-schema';
 
 interface Params {
   params: Promise<{ id: string }>;
+}
+
+/**
+ * GET: Retrieve a single project by ID.
+ * Requires admin session.
+ */
+export async function GET(request: Request, { params }: Params) {
+  const auth = requireAdminSession(request);
+  if (auth.errorResponse) {
+    return auth.errorResponse;
+  }
+
+  const { id } = await params;
+  try {
+    const projects = await loadProjects();
+    const project = projects.find((p) => p.id === id);
+    if (!project) {
+      return NextResponse.json({ error: 'Project not found.' }, { status: 404 });
+    }
+    return NextResponse.json({ success: true, project });
+  } catch (err) {
+    console.error('[Admin Project GET Error]:', err instanceof Error ? err.message : 'Unknown error');
+    return NextResponse.json({ error: 'Failed to retrieve project.' }, { status: 500 });
+  }
 }
 
 /**
@@ -12,16 +37,21 @@ interface Params {
  * Uses atomic in-memory mutation and commit to GitHub contents API with conflict retry.
  */
 export async function PUT(request: Request, { params }: Params) {
-  const session = getSessionFromRequest(request);
-  if (!session) {
-    return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
+  const auth = requireAdminSession(request);
+  if (auth.errorResponse) {
+    return auth.errorResponse;
   }
 
   const { id } = await params;
-  const body = await request.json();
+  const body = await request.json().catch(() => null);
 
-  if (body.aspectRatio && !isValidAspectRatio(body.aspectRatio)) {
-    return NextResponse.json({ error: 'Invalid aspect ratio format.' }, { status: 400 });
+  // Validate payload against schema and reject unknown fields
+  const validation = validateProjectPayload(body, true);
+  if (!validation.valid) {
+    return NextResponse.json(
+      { error: validation.errors.join(' ') },
+      { status: 400 }
+    );
   }
 
   try {
@@ -56,9 +86,10 @@ export async function PUT(request: Request, { params }: Params) {
     });
 
     if (!publishResult.success) {
+      console.error('[Admin Project PUT Publish Failure]:', publishResult.error || publishResult.message);
       const status = publishResult.error?.includes('not found') ? 404 : 500;
       return NextResponse.json(
-        { error: publishResult.error || publishResult.message },
+        { error: 'Failed to commit project updates.' },
         { status }
       );
     }
@@ -69,20 +100,22 @@ export async function PUT(request: Request, { params }: Params) {
       publish: publishResult
     });
   } catch (err) {
-    console.error('Update project error:', err);
-    const msg = err instanceof Error ? err.message : 'Failed to update project.';
-    return NextResponse.json({ error: msg }, { status: 500 });
+    console.error('[Admin Project PUT Error]:', err instanceof Error ? err.message : 'Unknown error');
+    return NextResponse.json(
+      { error: 'An unexpected error occurred while updating the project.' },
+      { status: 500 }
+    );
   }
 }
 
 /**
  * DELETE: Remove a project (Hero protected).
- * Uses atomic in-memory mutation and commit to GitHub contents API with conflict retry.
+ * Requires admin session and explicit hero check.
  */
 export async function DELETE(request: Request, { params }: Params) {
-  const session = getSessionFromRequest(request);
-  if (!session) {
-    return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
+  const auth = requireAdminSession(request);
+  if (auth.errorResponse) {
+    return auth.errorResponse;
   }
 
   const { id } = await params;
@@ -109,13 +142,12 @@ export async function DELETE(request: Request, { params }: Params) {
     });
 
     if (!publishResult.success) {
-      const status = publishResult.error?.includes('Cannot delete')
-        ? 403
-        : publishResult.error?.includes('not found')
-        ? 404
-        : 500;
+      console.error('[Admin Project DELETE Publish Failure]:', publishResult.error || publishResult.message);
+      const isProtected = publishResult.error?.includes('Cannot delete');
+      const isNotFound = publishResult.error?.includes('not found');
+      const status = isProtected ? 403 : isNotFound ? 404 : 500;
       return NextResponse.json(
-        { error: publishResult.error || publishResult.message },
+        { error: isProtected ? 'Cannot delete the hero showcase project.' : 'Failed to delete project.' },
         { status }
       );
     }
@@ -126,9 +158,11 @@ export async function DELETE(request: Request, { params }: Params) {
       publish: publishResult
     });
   } catch (err) {
-    console.error('Delete project error:', err);
-    const msg = err instanceof Error ? err.message : 'Failed to delete project.';
-    return NextResponse.json({ error: msg }, { status: 500 });
+    console.error('[Admin Project DELETE Error]:', err instanceof Error ? err.message : 'Unknown error');
+    return NextResponse.json(
+      { error: 'An unexpected error occurred while deleting the project.' },
+      { status: 500 }
+    );
   }
 }
 
@@ -137,13 +171,33 @@ export async function DELETE(request: Request, { params }: Params) {
  * Uses atomic in-memory mutation and commit to GitHub contents API with conflict retry.
  */
 export async function PATCH(request: Request, { params }: Params) {
-  const session = getSessionFromRequest(request);
-  if (!session) {
-    return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 });
+  const auth = requireAdminSession(request);
+  if (auth.errorResponse) {
+    return auth.errorResponse;
   }
 
   const { id } = await params;
-  const body = await request.json();
+  const body = await request.json().catch(() => null);
+
+  if (!body || typeof body !== 'object') {
+    return NextResponse.json({ error: 'Invalid patch payload.' }, { status: 400 });
+  }
+
+  // Reject unexpected patch fields
+  const allowedPatchKeys = new Set(['published', 'order']);
+  for (const k of Object.keys(body)) {
+    if (!allowedPatchKeys.has(k)) {
+      return NextResponse.json({ error: `Unexpected field "${k}" in patch request.` }, { status: 400 });
+    }
+  }
+
+  if (body.order !== undefined && (!Number.isInteger(body.order) || body.order < 0)) {
+    return NextResponse.json({ error: 'Order must be a non-negative integer.' }, { status: 400 });
+  }
+
+  if (body.published !== undefined && typeof body.published !== 'boolean') {
+    return NextResponse.json({ error: 'Published must be a boolean.' }, { status: 400 });
+  }
 
   try {
     const publishResult = await mutateProjectsAndPublish((currentProjects) => {
@@ -175,9 +229,10 @@ export async function PATCH(request: Request, { params }: Params) {
     });
 
     if (!publishResult.success) {
+      console.error('[Admin Project PATCH Publish Failure]:', publishResult.error || publishResult.message);
       const status = publishResult.error?.includes('not found') ? 404 : 500;
       return NextResponse.json(
-        { error: publishResult.error || publishResult.message },
+        { error: 'Failed to update project status.' },
         { status }
       );
     }
@@ -188,8 +243,10 @@ export async function PATCH(request: Request, { params }: Params) {
       publish: publishResult
     });
   } catch (err) {
-    console.error('Patch project error:', err);
-    const msg = err instanceof Error ? err.message : 'Failed to update project.';
-    return NextResponse.json({ error: msg }, { status: 500 });
+    console.error('[Admin Project PATCH Error]:', err instanceof Error ? err.message : 'Unknown error');
+    return NextResponse.json(
+      { error: 'An unexpected error occurred while patching the project.' },
+      { status: 500 }
+    );
   }
 }

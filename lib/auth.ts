@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
 export const ADMIN_COOKIE_NAME = 'shefeer_admin_session';
 
@@ -89,10 +90,11 @@ export function verifySessionToken(token?: string | null): SessionPayload | null
       .update(encodedPayload)
       .digest('base64url');
 
-    const sigBuf = Buffer.from(signature);
-    const expectedBuf = Buffer.from(expectedSignature);
+    // Constant-time HMAC verification using fixed-length SHA-256 digests
+    const sigSha = crypto.createHash('sha256').update(signature).digest();
+    const expectedSha = crypto.createHash('sha256').update(expectedSignature).digest();
 
-    if (sigBuf.length !== expectedBuf.length || !crypto.timingSafeEqual(sigBuf, expectedBuf)) {
+    if (!crypto.timingSafeEqual(sigSha, expectedSha)) {
       return null;
     }
 
@@ -111,19 +113,17 @@ export function verifySessionToken(token?: string | null): SessionPayload | null
 
 /**
  * Verifies password against configured ADMIN_PASSWORD using constant-time comparison.
+ * Hashes both values with SHA-256 to ensure identical fixed buffer lengths before comparison,
+ * eliminating length-based timing leakages.
  */
 export function verifyAdminPassword(input: string): boolean {
   const actual = getAdminPassword();
   if (!actual || !input) return false;
 
-  const inputBuf = Buffer.from(input);
-  const actualBuf = Buffer.from(actual);
+  const inputHash = crypto.createHash('sha256').update(input).digest();
+  const actualHash = crypto.createHash('sha256').update(actual).digest();
 
-  if (inputBuf.length !== actualBuf.length) {
-    return false;
-  }
-
-  return crypto.timingSafeEqual(inputBuf, actualBuf);
+  return crypto.timingSafeEqual(inputHash, actualHash);
 }
 
 /**
@@ -136,6 +136,30 @@ export function getSessionFromRequest(request: Request): SessionPayload | null {
   const cookiesMap = parseCookies(cookieHeader);
   const token = cookiesMap[ADMIN_COOKIE_NAME];
   return verifySessionToken(token);
+}
+
+/**
+ * Shared server-side helper to verify admin session on any incoming Request.
+ * Returns { session } on success, or { session: null, errorResponse: 401 } on failure.
+ */
+export function requireAdminSession(request: Request): {
+  session: SessionPayload;
+  errorResponse?: never;
+} | {
+  session: null;
+  errorResponse: NextResponse;
+} {
+  const session = getSessionFromRequest(request);
+  if (!session) {
+    return {
+      session: null,
+      errorResponse: NextResponse.json(
+        { error: 'Unauthorized.' },
+        { status: 401 }
+      )
+    };
+  }
+  return { session };
 }
 
 /**
@@ -155,6 +179,24 @@ export function getSessionCookieOptions(expiresInSeconds = 7 * 24 * 3600): strin
   return [
     `Path=/`,
     `Max-Age=${expiresInSeconds}`,
+    `HttpOnly`,
+    `SameSite=Lax`,
+    isProd ? `Secure` : ''
+  ]
+    .filter(Boolean)
+    .join('; ');
+}
+
+/**
+ * Helper to build Set-Cookie header for clearing the session cookie on logout.
+ */
+export function getClearSessionCookieHeader(): string {
+  const isProd = process.env.NODE_ENV === 'production';
+  return [
+    `${ADMIN_COOKIE_NAME}=`,
+    `Path=/`,
+    `Max-Age=0`,
+    `Expires=Thu, 01 Jan 1970 00:00:00 GMT`,
     `HttpOnly`,
     `SameSite=Lax`,
     isProd ? `Secure` : ''

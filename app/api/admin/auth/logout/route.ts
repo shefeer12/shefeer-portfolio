@@ -1,17 +1,20 @@
 import { NextResponse } from 'next/server';
-import { ADMIN_COOKIE_NAME } from '@/lib/auth';
+import { requireAdminSession, getClearSessionCookieHeader } from '@/lib/auth';
 
-export async function POST() {
+export async function POST(request: Request) {
+  // Shared helper verifies session cookie first
+  const auth = requireAdminSession(request);
+  if (auth.errorResponse) {
+    return auth.errorResponse;
+  }
+
   const response = NextResponse.json({
     success: true,
     message: 'Logged out successfully.'
   });
 
-  // Clear cookie immediately
-  response.headers.set(
-    'Set-Cookie',
-    `${ADMIN_COOKIE_NAME}=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax`
-  );
+  // Clear cookie with full security flags
+  response.headers.set('Set-Cookie', getClearSessionCookieHeader());
 
   return response;
 }

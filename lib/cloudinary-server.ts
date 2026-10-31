@@ -6,11 +6,20 @@ export interface CloudinarySignatureResult {
   apiKey: string;
   cloudName: string;
   folder: string;
+  resourceType: string;
+  allowedFormats: string[];
   uploadUrl: string;
   maxSizeBytes: number;
 }
 
-// Configurable upload size limit (Default: 250 MB)
+// Fixed folder for portfolio video uploads (server-enforced)
+export const FIXED_CLOUDINARY_FOLDER =
+  'Muhammed Shefeer K | Video Editing Portfolio/01_Social_Media_Reels';
+
+// Allowed video formats (server-enforced)
+export const ALLOWED_VIDEO_FORMATS = ['mp4', 'mov', 'webm'] as const;
+
+// Sensible max upload size limit: 250 MB
 export const MAX_VIDEO_UPLOAD_BYTES = process.env.MAX_VIDEO_UPLOAD_BYTES
   ? parseInt(process.env.MAX_VIDEO_UPLOAD_BYTES, 10)
   : 250 * 1024 * 1024;
@@ -34,12 +43,11 @@ export function isCloudinaryServerConfigured(): boolean {
 }
 
 /**
- * Generates an authenticated, signed parameter bundle for direct Cloudinary upload.
- * The API secret is used solely on the server to compute the SHA-1 signature.
+ * Generates an authenticated, signed parameter bundle for direct Cloudinary video upload.
+ * Signs strictly the parameters chosen by the server (fixed folder, timestamp, video resource_type).
+ * Never signs arbitrary client-supplied parameters.
  */
-export function generateCloudinaryUploadSignature(
-  folder = 'Muhammed Shefeer K | Video Editing Portfolio/01_Social_Media_Reels'
-): CloudinarySignatureResult {
+export function generateCloudinaryUploadSignature(): CloudinarySignatureResult {
   const apiKey = process.env.CLOUDINARY_API_KEY || '';
   const apiSecret = process.env.CLOUDINARY_API_SECRET || '';
   const cloudName =
@@ -56,7 +64,7 @@ export function generateCloudinaryUploadSignature(
   // Cloudinary signature algorithm:
   // Sort parameters alphabetically, serialize as param1=value1&param2=value2, append API secret, compute SHA-1.
   const paramsToSign: Record<string, string | number> = {
-    folder,
+    folder: FIXED_CLOUDINARY_FOLDER,
     timestamp
   };
 
@@ -71,7 +79,9 @@ export function generateCloudinaryUploadSignature(
     timestamp,
     apiKey,
     cloudName,
-    folder,
+    folder: FIXED_CLOUDINARY_FOLDER,
+    resourceType: 'video',
+    allowedFormats: [...ALLOWED_VIDEO_FORMATS],
     uploadUrl: `https://api.cloudinary.com/v1_1/${cloudName}/video/upload`,
     maxSizeBytes: MAX_VIDEO_UPLOAD_BYTES
   };
@@ -83,7 +93,6 @@ export function generateCloudinaryUploadSignature(
 export function constructCloudinaryThumbnail(videoUrl: string): string {
   if (!videoUrl) return '';
   if (videoUrl.includes('res.cloudinary.com')) {
-    // Replace extension with .jpg and add transformation
     const transformed = videoUrl.replace(/\.(mp4|mov|webm)$/i, '.jpg');
     if (!transformed.includes('/so_')) {
       return transformed.replace('/video/upload/', '/video/upload/so_1,q_auto,f_auto/');
