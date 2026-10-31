@@ -4,10 +4,12 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Project } from '@/lib/projects';
 import { useReducedMotion } from 'motion/react';
 import { cn } from '@/lib/utils';
+import { getDeliveryVideoUrl, getPosterUrl } from '@/lib/cloudinary-url';
 
 export interface CinematicHeroBackgroundProps {
   projects: Project[];
   isMuted: boolean;
+  isPaused?: boolean;
   onActiveProjectChange?: (project: Project, index: number) => void;
   onAudioError?: () => void;
   className?: string;
@@ -17,16 +19,24 @@ export interface CinematicHeroBackgroundProps {
  * CinematicHeroBackground
  * 
  * High-performance, dual-buffer video crossfade background.
- * Uses two video elements (Slot A & Slot B) to deliver seamless, zero-flash transitions
- * between curated showcase cuts without decoding stalls or simultaneous audio conflicts.
+ * Optimized for minimal initial payload, bandwidth savings, and mobile devices:
+ * - Load ONLY curated clips
+ * - First frame poster shows instantly
+ * - Slot B (next clip) preloads ONLY after Slot A is playing
+ * - IntersectionObserver pauses video when scrolled off-screen
+ * - Respects prefers-reduced-motion, navigator.connection.saveData, and slow connections
+ * - Width-limited delivery streams (640w mobile, 1080w desktop)
+ * - Seamless 800ms A/B crossfade preserved
  */
 export default function CinematicHeroBackground({
   projects,
   isMuted,
+  isPaused = false,
   onActiveProjectChange,
   onAudioError,
   className,
 }: CinematicHeroBackgroundProps) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const prefersReducedMotion = useReducedMotion();
 
   // Guard against empty array
@@ -39,9 +49,11 @@ export default function CinematicHeroBackground({
   const [indexA, setIndexA] = useState<number>(0);
   const [indexB, setIndexB] = useState<number>(safeProjects.length > 1 ? 1 : 0);
 
-  // Crossfade state
-  const [isCrossfading, setIsCrossfading] = useState<boolean>(false);
+  // Playback & optimization states
   const [hasStartedPlaying, setHasStartedPlaying] = useState<boolean>(false);
+  const [isInView, setIsInView] = useState<boolean>(true);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [disableAutoplay, setDisableAutoplay] = useState<boolean>(false);
 
   // Video element refs
   const videoRefA = useRef<HTMLVideoElement | null>(null);
@@ -55,7 +67,71 @@ export default function CinematicHeroBackground({
   const activeIndex = activeSlot === 'A' ? indexA : indexB;
   const activeProject = safeProjects[activeIndex] || safeProjects[0];
 
-  // Notify parent of initial and subsequent active project
+  // Detect mobile viewport and network constraints on mount
+  useEffect(() => {
+    const checkConstraints = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+
+      // Check prefers-reduced-motion, saveData, and slow connections
+      const nav = typeof navigator !== 'undefined' ? (navigator as unknown as {
+        connection?: {
+          saveData?: boolean;
+          effectiveType?: string;
+        };
+      }) : {};
+
+      const saveData = Boolean(nav.connection?.saveData);
+      const effectiveType = nav.connection?.effectiveType;
+      const isSlow = effectiveType === 'slow-2g' || effectiveType === '2g' || effectiveType === '3g';
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (reducedMotion || saveData || isSlow) {
+        setDisableAutoplay(true);
+      }
+    };
+
+    checkConstraints();
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // IntersectionObserver to pause/stop hero video when scrolled off-screen
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.05 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Control playback based on visibility and isPaused prop
+  useEffect(() => {
+    const activeVideo = activeSlot === 'A' ? videoRefA.current : videoRefB.current;
+    if (!activeVideo || disableAutoplay) return;
+
+    if (!isInView || isPaused) {
+      if (!activeVideo.paused) {
+        activeVideo.pause();
+      }
+    } else if (hasStartedPlaying && activeVideo.paused) {
+      activeVideo.play().catch(() => {});
+    }
+  }, [isInView, isPaused, activeSlot, disableAutoplay, hasStartedPlaying]);
+
+  // Notify parent of active project change
   useEffect(() => {
     if (activeProject && onActiveProjectChange) {
       onActiveProjectChange(activeProject, activeIndex);
@@ -75,7 +151,7 @@ export default function CinematicHeroBackground({
 
     if (!activeVideo) return;
 
-    if (isMuted) {
+    if (isMuted || isPaused || !isInView) {
       activeVideo.muted = true;
       activeVideo.volume = 0;
     } else {
@@ -89,22 +165,21 @@ export default function CinematicHeroBackground({
         });
       }
     }
-  }, [isMuted, activeSlot, onAudioError]);
+  }, [isMuted, isPaused, isInView, activeSlot, onAudioError]);
 
   /**
-   * Transition to the next clip in rotation sequence
+   * Transition to next clip in rotation sequence
    */
   const transitionToNext = useCallback(() => {
-    if (transitionLockRef.current || safeProjects.length <= 1) return;
+    if (transitionLockRef.current || safeProjects.length <= 1 || disableAutoplay) return;
     transitionLockRef.current = true;
-    setIsCrossfading(true);
 
     const nextSlot = activeSlot === 'A' ? 'B' : 'A';
     const nextVideo = nextSlot === 'A' ? videoRefA.current : videoRefB.current;
     const currentVideo = activeSlot === 'A' ? videoRefA.current : videoRefB.current;
 
     if (nextVideo) {
-      // Configure audio before playback handover
+      // Configure audio before playback handover to persist user mute preference
       nextVideo.muted = isMuted;
       nextVideo.volume = isMuted ? 0 : 0.8;
       nextVideo.currentTime = 0;
@@ -120,7 +195,7 @@ export default function CinematicHeroBackground({
     // Switch active slot to trigger CSS opacity crossfade
     setActiveSlot(nextSlot);
 
-    // Crossfade duration: 800ms (or 0ms if prefersReducedMotion)
+    // Crossfade duration: 800ms (or 50ms if prefersReducedMotion)
     const fadeDuration = prefersReducedMotion ? 50 : 800;
 
     if (crossfadeTimerRef.current) {
@@ -135,24 +210,23 @@ export default function CinematicHeroBackground({
         currentVideo.currentTime = 0;
       }
 
-      // Cue up the next clip in the rotation sequence for the standby slot
+      // Cue up the next clip in rotation sequence for standby slot
       if (activeSlot === 'A') {
-        // We just switched to B (playing indexB). Prepare A with (indexB + 1)
         const nextIndexA = (indexB + 1) % safeProjects.length;
         setIndexA(nextIndexA);
       } else {
-        // We just switched to A (playing indexA). Prepare B with (indexA + 1)
         const nextIndexB = (indexA + 1) % safeProjects.length;
         setIndexB(nextIndexB);
       }
 
-      setIsCrossfading(false);
       transitionLockRef.current = false;
     }, fadeDuration);
-  }, [activeSlot, indexA, indexB, isMuted, prefersReducedMotion, safeProjects.length]);
+  }, [activeSlot, disableAutoplay, indexA, indexB, isMuted, prefersReducedMotion, safeProjects.length]);
 
-  // Initial playback start
+  // Initial playback start for Slot A
   useEffect(() => {
+    if (disableAutoplay) return;
+
     const videoA = videoRefA.current;
     if (videoA) {
       videoA.muted = true;
@@ -163,7 +237,6 @@ export default function CinematicHeroBackground({
           .then(() => setHasStartedPlaying(true))
           .catch((err) => {
             console.warn('Initial hero autoplay notice:', err);
-            // Even if browser restricts autoplay, fallback to user interaction or retry
           });
       }
     }
@@ -173,12 +246,12 @@ export default function CinematicHeroBackground({
         clearTimeout(crossfadeTimerRef.current);
       }
     };
-  }, []);
+  }, [disableAutoplay]);
 
-  // Handle tab visibility changes to resume playback seamlessly
+  // Handle tab visibility changes
   useEffect(() => {
     const handleVisibilityChange = () => {
-      if (!document.hidden) {
+      if (!document.hidden && isInView && !isPaused && !disableAutoplay) {
         const activeVideo = activeSlot === 'A' ? videoRefA.current : videoRefB.current;
         if (activeVideo && activeVideo.paused) {
           activeVideo.play().catch(() => {});
@@ -188,15 +261,14 @@ export default function CinematicHeroBackground({
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, [activeSlot]);
+  }, [activeSlot, isInView, isPaused, disableAutoplay]);
 
-  // Error recovery: If a video fails to decode/load, skip to the next
+  // Error recovery
   const handleVideoError = (slot: 'A' | 'B') => {
     console.warn(`Video load error in slot ${slot}. Skipping to next clip.`);
     if (slot === activeSlot) {
       transitionToNext();
     } else {
-      // Standby failed: advance standby slot index
       if (slot === 'A') {
         setIndexA((prev) => (prev + 1) % safeProjects.length);
       } else {
@@ -205,12 +277,11 @@ export default function CinematicHeroBackground({
     }
   };
 
-  // Monitor playback progress to initiate smooth crossfade before abrupt end
+  // Monitor playback progress to initiate smooth crossfade before clip end
   const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement>) => {
     const video = e.currentTarget;
     if (!video.duration || Number.isNaN(video.duration)) return;
 
-    // Trigger crossfade 0.6 seconds before clip ends for seamless blend
     const remainingTime = video.duration - video.currentTime;
     if (remainingTime <= 0.6 && !transitionLockRef.current && safeProjects.length > 1) {
       transitionToNext();
@@ -220,27 +291,46 @@ export default function CinematicHeroBackground({
   const projectA = safeProjects[indexA] || safeProjects[0];
   const projectB = safeProjects[indexB] || safeProjects[0];
 
+  // Sizing: lighter on mobile (640px) vs desktop (1080px)
+  const targetWidth = isMobile ? 640 : 1080;
+
+  const projectAVideoSrc = projectA ? getDeliveryVideoUrl(projectA.videoUrl, { width: targetWidth }) : '';
+  const projectBVideoSrc = projectB ? getDeliveryVideoUrl(projectB.videoUrl, { width: targetWidth }) : '';
+
+  const projectAPosterSrc = projectA
+    ? getPosterUrl(projectA.videoUrl, { width: targetWidth }) || projectA.thumbnailUrl || projectA.thumbnail
+    : '';
+  const projectBPosterSrc = projectB
+    ? getPosterUrl(projectB.videoUrl, { width: targetWidth }) || projectB.thumbnailUrl || projectB.thumbnail
+    : '';
+
   return (
     <div
+      ref={containerRef}
       className={cn(
         'absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none z-10',
         className
       )}
       aria-hidden="true"
     >
-      {/* 
-        Responsive Video Stage:
-        On desktop, positioned across the center and right side (58%-62% width),
-        filling full viewport height. On mobile/tablet, covers full screen behind dark scrim.
-      */}
       <div className="absolute top-0 right-0 bottom-0 w-full lg:w-[62%] xl:w-[58%] 2xl:w-[54%] h-full overflow-hidden">
         
-        {/* Slot A Video */}
-        {projectA && (
+        {/* Instant First Frame Poster Overlay (Fades out only after video starts playing) */}
+        {(!hasStartedPlaying || disableAutoplay) && projectAPosterSrc && (
+          <div
+            className="absolute inset-0 w-full h-full bg-cover bg-center lg:bg-[60%_center] z-20 transition-opacity duration-700 pointer-events-none"
+            style={{
+              backgroundImage: `url("${projectAPosterSrc}")`,
+            }}
+          />
+        )}
+
+        {/* Slot A Video: starts as soon as it can */}
+        {!disableAutoplay && projectA && (
           <video
             ref={videoRefA}
-            src={projectA.videoUrl}
-            poster={projectA.thumbnailUrl || projectA.thumbnail}
+            src={projectAVideoSrc}
+            poster={projectAPosterSrc}
             playsInline
             autoPlay
             muted
@@ -258,12 +348,16 @@ export default function CinematicHeroBackground({
           />
         )}
 
-        {/* Slot B Video */}
-        {projectB && safeProjects.length > 1 && (
+        {/* 
+          Slot B Video:
+          Preloads ONLY after the current clip is actively playing (hasStartedPlaying === true).
+          Never downloads before Slot A starts, saving bandwidth on initial page load.
+        */}
+        {!disableAutoplay && projectB && safeProjects.length > 1 && hasStartedPlaying && (
           <video
             ref={videoRefB}
-            src={projectB.videoUrl}
-            poster={projectB.thumbnailUrl || projectB.thumbnail}
+            src={projectBVideoSrc}
+            poster={projectBPosterSrc}
             playsInline
             muted
             loop={false}
@@ -279,34 +373,12 @@ export default function CinematicHeroBackground({
           />
         )}
 
-        {/* First Frame Poster Fallback (Before video starts) */}
-        {!hasStartedPlaying && projectA && (
-          <div
-            className="absolute inset-0 w-full h-full bg-cover bg-center lg:bg-[60%_center] z-20 transition-opacity duration-500"
-            style={{
-              backgroundImage: `url(${projectA.thumbnailUrl || projectA.thumbnail})`,
-            }}
-          />
-        )}
-
-        {/* 
-          ATMOSPHERIC GRADIENT BLENDING & EDGE FEATHERING
-          Keeps video sharp in the focus zone, with soft cinematic dark transitions on all borders.
-        */}
-
-        {/* Left feathered gradient: Blends video seamlessly into deep #070709 background */}
+        {/* Feathered dark gradient edges & atmospheric vignette */}
         <div className="absolute inset-y-0 left-0 w-36 sm:w-56 lg:w-72 xl:w-80 bg-gradient-to-r from-[#070709] via-[#070709]/90 to-transparent z-20 pointer-events-none" />
-
-        {/* Top edge vignette: Soft blend beneath header navigation */}
         <div className="absolute top-0 inset-x-0 h-32 sm:h-40 bg-gradient-to-b from-[#070709] via-[#070709]/70 to-transparent z-20 pointer-events-none" />
-
-        {/* Bottom edge vignette: Soft blend into marquee banner */}
         <div className="absolute bottom-0 inset-x-0 h-32 sm:h-44 bg-gradient-to-t from-[#070709] via-[#070709]/80 to-transparent z-20 pointer-events-none" />
-
-        {/* Right edge subtle feather */}
         <div className="absolute inset-y-0 right-0 w-16 sm:w-24 bg-gradient-to-l from-[#070709]/40 to-transparent z-20 pointer-events-none" />
 
-        {/* Subtle radial filmic vignette to focus attention */}
         <div
           className="absolute inset-0 z-20 pointer-events-none"
           style={{
@@ -316,11 +388,7 @@ export default function CinematicHeroBackground({
         />
       </div>
 
-      {/* 
-        Mobile & Tablet Scrim Overlay:
-        On smaller viewports where the text overlays the video, this scrim guarantees
-        100% headline legibility and text contrast while keeping background motion visible.
-      */}
+      {/* Mobile scrim overlay */}
       <div className="absolute inset-0 bg-[#070709]/80 sm:bg-[#070709]/70 lg:hidden z-20 pointer-events-none" />
     </div>
   );

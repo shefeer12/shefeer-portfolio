@@ -25,10 +25,15 @@ interface ProjectModalProps {
 
 export default function ProjectModal({ project, onClose, onNext, onPrev }: ProjectModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
-  // Prevent background scrolling and handle Escape/Arrow keys
+  // Prevent background scrolling, trap focus, and handle Escape/Arrow keys
   useEffect(() => {
     if (!project) return;
+
+    // Save previously focused element to return focus on modal close
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
 
     const originalOverflow = document.body.style.overflow;
     const originalPaddingRight = document.body.style.paddingRight;
@@ -39,10 +44,57 @@ export default function ProjectModal({ project, onClose, onNext, onPrev }: Proje
       document.body.style.paddingRight = `${scrollbarWidth}px`;
     }
 
+    // Move initial focus to close button for screen reader & keyboard accessibility
+    setTimeout(() => {
+      closeButtonRef.current?.focus();
+    }, 50);
+
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-      if (e.key === 'ArrowRight' && onNext) onNext();
-      if (e.key === 'ArrowLeft' && onPrev) onPrev();
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+      if (e.key === 'ArrowRight' && onNext) {
+        onNext();
+        return;
+      }
+      if (e.key === 'ArrowLeft' && onPrev) {
+        onPrev();
+        return;
+      }
+
+      // Trap focus inside modal
+      if (e.key === 'Tab') {
+        const modalEl = modalRef.current;
+        if (!modalEl) return;
+
+        const focusable = Array.from(
+          modalEl.querySelectorAll<HTMLElement>(
+            'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          )
+        ).filter((el) => el.offsetParent !== null || el.offsetWidth > 0 || el.offsetHeight > 0);
+
+        if (focusable.length === 0) {
+          e.preventDefault();
+          return;
+        }
+
+        const firstElement = focusable[0];
+        const lastElement = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement || !modalEl.contains(document.activeElement)) {
+            e.preventDefault();
+            lastElement.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement || !modalEl.contains(document.activeElement)) {
+            e.preventDefault();
+            firstElement.focus();
+          }
+        }
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -51,6 +103,11 @@ export default function ProjectModal({ project, onClose, onNext, onPrev }: Proje
       document.body.style.overflow = originalOverflow;
       document.body.style.paddingRight = originalPaddingRight;
       window.removeEventListener('keydown', handleKeyDown);
+
+      // Return focus to the trigger element when closed
+      if (previousFocusRef.current && typeof previousFocusRef.current.focus === 'function') {
+        previousFocusRef.current.focus();
+      }
     };
   }, [project, onClose, onNext, onPrev]);
 
@@ -75,6 +132,7 @@ export default function ProjectModal({ project, onClose, onNext, onPrev }: Proje
       >
         {/* Sleek, accessible close button */}
         <button
+          ref={closeButtonRef}
           type="button"
           onClick={onClose}
           className="absolute top-3.5 right-3.5 z-40 w-9 h-9 rounded-full bg-black/80 hover:bg-white/15 border border-white/20 text-white/90 hover:text-white flex items-center justify-center transition-all focus:outline-none focus:ring-2 focus:ring-accent"

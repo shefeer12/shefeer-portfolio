@@ -13,9 +13,10 @@ import VariableProximity from '@/components/reactbits/VariableProximity';
 
 interface HeroProps {
   onOpenShowreel?: () => void;
+  isPaused?: boolean;
 }
 
-export default function Hero({ onOpenShowreel }: HeroProps) {
+export default function Hero({ onOpenShowreel, isPaused = false }: HeroProps) {
   const rotationProjects = getHeroRotationProjects();
 
   // Unified audio state: Starts muted for cross-browser autoplay compliance
@@ -70,6 +71,7 @@ export default function Hero({ onOpenShowreel }: HeroProps) {
       <CinematicHeroBackground
         projects={rotationProjects}
         isMuted={isMuted}
+        isPaused={isPaused}
         onActiveProjectChange={handleActiveProjectChange}
         onAudioError={handleAudioError}
       />

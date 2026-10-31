@@ -12,10 +12,10 @@ import {
   VolumeX
 } from 'lucide-react';
 import {
-  getCloudinaryVideoUrl,
-  getCloudinaryVideoPosterUrl,
+  getDeliveryVideoUrl,
+  getPosterUrl,
   isCloudinaryUrl
-} from '@/lib/cloudinary';
+} from '@/lib/cloudinary-url';
 import { resolveVideoDuration } from '@/lib/video-durations';
 import { parseAspectRatio } from '@/lib/projects';
 import ElasticSlider from '@/components/reactbits/ElasticSlider';
@@ -57,20 +57,20 @@ export default function VideoPlayer({
   const videoRef = useRef<HTMLVideoElement>(null);
   const hideControlsTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Resolve Cloudinary URLs
+  // Resolve Cloudinary URLs with width limit (never deliver unconstrained master uploads)
   const isCloudinary = type === 'cloudinary' || Boolean(cloudinaryPublicId) || isCloudinaryUrl(src);
   const resolvedSrc = cloudinaryPublicId
-    ? getCloudinaryVideoUrl(cloudinaryPublicId)
+    ? getDeliveryVideoUrl(cloudinaryPublicId, { width: 1080 })
     : isCloudinary && src
-    ? getCloudinaryVideoUrl(src)
+    ? getDeliveryVideoUrl(src, { width: 1080 })
     : src;
 
   const resolvedPoster =
     poster ||
     (cloudinaryPublicId
-      ? getCloudinaryVideoPosterUrl(cloudinaryPublicId)
+      ? getPosterUrl(cloudinaryPublicId, { width: 1080 })
       : isCloudinaryUrl(src)
-      ? getCloudinaryVideoPosterUrl(src)
+      ? getPosterUrl(src, { width: 1080 })
       : undefined);
 
   const isSimulated = isDemo || type === 'demo' || !resolvedSrc;
@@ -91,6 +91,7 @@ export default function VideoPlayer({
   const [scrubTime, setScrubTime] = useState<number>(0);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [hasError, setHasError] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(!isSimulated);
   const [isHovering, setIsHovering] = useState<boolean>(false);
   const [isBuffering, setIsBuffering] = useState<boolean>(false);
   const [isEnded, setIsEnded] = useState<boolean>(false);
@@ -125,6 +126,7 @@ export default function VideoPlayer({
     setIsEnded(false);
     setIsPlaying(autoPlay);
     setHasError(false);
+    setIsLoading(!isSimulated);
     setIsBuffering(false);
     setIntrinsicRatio(null);
     setDuration(resolvedDuration);
@@ -407,12 +409,19 @@ export default function VideoPlayer({
               setIntrinsicRatio(`${el.videoWidth} / ${el.videoHeight}`);
             }
             setIsBuffering(false);
+            setIsLoading(false);
+          }}
+          onLoadedData={() => {
+            setIsLoading(false);
+            setIsBuffering(false);
           }}
           onDurationChange={(e) => {
             syncDuration(e.currentTarget);
           }}
           onCanPlay={(e) => {
             syncDuration(e.currentTarget);
+            setIsLoading(false);
+            setIsBuffering(false);
           }}
           onTimeUpdate={(e) => {
             const el = e.currentTarget;
@@ -431,16 +440,22 @@ export default function VideoPlayer({
           onPlay={() => {
             setIsPlaying(true);
             setIsEnded(false);
+            setIsLoading(false);
             if (videoRef.current) syncDuration(videoRef.current);
           }}
           onPause={() => setIsPlaying(false)}
           onWaiting={() => setIsBuffering(true)}
           onPlaying={() => {
             setIsBuffering(false);
+            setIsLoading(false);
             setIsPlaying(true);
             setIsEnded(false);
           }}
-          onError={() => setHasError(true)}
+          onError={() => {
+            setHasError(true);
+            setIsLoading(false);
+            setIsBuffering(false);
+          }}
           onEnded={() => {
             setIsPlaying(false);
             setIsEnded(true);
@@ -467,23 +482,25 @@ export default function VideoPlayer({
 
       {/* 3. Error Fallback */}
       {hasError && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-black/95 z-20">
-          <AlertCircle className="w-9 h-9 text-accent mb-3" />
-          <p className="text-sm font-medium text-white mb-1">Video failed to load</p>
-          <p className="text-xs text-muted mb-4 max-w-xs">
-            The media stream is temporarily unavailable. You can retry playback or preview the edit below.
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-black/95 z-30">
+          <AlertCircle className="w-10 h-10 text-accent mb-3" />
+          <p className="text-sm font-semibold text-white mb-1">Playback Encountered an Issue</p>
+          <p className="text-xs text-white/60 mb-5 max-w-xs leading-relaxed">
+            The media stream could not be loaded or was interrupted. Check your connection or retry playback.
           </p>
           <button
             type="button"
             onClick={() => {
               setHasError(false);
+              setIsLoading(true);
               if (videoRef.current) {
                 videoRef.current.load();
+                videoRef.current.play().catch(() => {});
               }
             }}
-            className="flex items-center gap-2 px-4 py-2 text-xs uppercase tracking-wider bg-white/10 hover:bg-white/20 text-white rounded transition"
+            className="flex items-center gap-2 px-4 py-2 text-xs font-mono uppercase tracking-wider bg-accent text-black font-semibold rounded hover:bg-accent-hover transition shadow-lg shadow-accent/20"
           >
-            <RotateCcw className="w-3.5 h-3.5" /> Retry
+            <RotateCcw className="w-3.5 h-3.5" /> Retry Playback
           </button>
         </div>
       )}
@@ -506,10 +523,13 @@ export default function VideoPlayer({
         </div>
       )}
 
-      {/* 5. Buffering Indicator */}
-      {isBuffering && !hasError && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-15 bg-black/20">
+      {/* 5. Loading & Buffering Indicator */}
+      {(isLoading || isBuffering) && !hasError && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-20 bg-black/40 backdrop-blur-[2px]">
           <div className="w-10 h-10 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+          <span className="text-[10px] font-mono tracking-widest text-white/70 uppercase mt-3">
+            Loading Stream...
+          </span>
         </div>
       )}
 

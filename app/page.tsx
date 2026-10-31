@@ -62,7 +62,7 @@ export default function Home() {
       <Navbar />
 
       {/* 2. Hero with Headline “I MAKE EVERY FRAME MATTER.” */}
-      <Hero />
+      <Hero isPaused={Boolean(selectedProject)} />
 
       {/* 3. Full Work Gallery Containing All 12 Existing Videos */}
       <WorkGallery onSelectProject={(project) => setSelectedProject(project)} />
