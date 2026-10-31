@@ -8,7 +8,7 @@ import React, {
   useMemo,
   useState
 } from 'react';
-import { AnimatePresence, motion, type Transition } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion, type Transition } from 'motion/react';
 import { cn } from '@/lib/utils';
 
 export interface RotatingTextRef {
@@ -157,10 +157,17 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>(
       [staggerDuration, staggerFrom]
     );
 
+    const prefersReducedMotion = useReducedMotion();
+
     return (
-      <span className={cn('inline-flex flex-wrap whitespace-pre-wrap relative align-middle', mainClassName)}>
+      <motion.span
+        layout
+        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+        className={cn('inline-flex flex-wrap whitespace-pre-wrap relative align-middle overflow-hidden', mainClassName)}
+      >
         <span className="sr-only">{texts[currentTextIndex]}</span>
-        <AnimatePresence mode="wait" initial={false}>
+        {/* Overlapping popLayout prevents the badge from ever going empty between words */}
+        <AnimatePresence mode="popLayout" initial={false}>
           <motion.span
             key={currentTextIndex}
             className={cn('inline-flex flex-wrap relative', splitLevelClassName)}
@@ -176,12 +183,26 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>(
                   {wordObj.characters.map((char, charIndex) => (
                     <motion.span
                       key={charIndex}
-                      initial={{ y: '100%', opacity: 0, rotateX: 60 }}
-                      animate={{ y: 0, opacity: 1, rotateX: 0 }}
-                      exit={{ y: '-100%', opacity: 0, rotateX: -60 }}
+                      initial={
+                        prefersReducedMotion
+                          ? { opacity: 0 }
+                          : { y: '100%', opacity: 0, rotateX: 60 }
+                      }
+                      animate={
+                        prefersReducedMotion
+                          ? { opacity: 1 }
+                          : { y: 0, opacity: 1, rotateX: 0 }
+                      }
+                      exit={
+                        prefersReducedMotion
+                          ? { opacity: 0 }
+                          : { y: '-100%', opacity: 0, rotateX: -60 }
+                      }
                       transition={{
                         ...transition,
-                        delay: getStaggerDelay(previousCharsCount + charIndex, totalChars)
+                        delay: prefersReducedMotion
+                          ? 0
+                          : getStaggerDelay(previousCharsCount + charIndex, totalChars)
                       }}
                       className={cn('inline-block origin-bottom', elementLevelClassName)}
                     >
@@ -194,7 +215,7 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>(
             })}
           </motion.span>
         </AnimatePresence>
-      </span>
+      </motion.span>
     );
   }
 );
