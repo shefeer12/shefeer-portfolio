@@ -181,10 +181,10 @@ export default function Hero({ onOpenShowreel }: HeroProps) {
 
       {/* 
         Animated Speaker Toggle (React Bits Inspired)
-        Positioned in the lower-right area of the cinematic hero video composition.
-        Separated with sufficient margin from the viewport edge and fixed floating WhatsApp button.
+        Positioned in the lower-left area of the cinematic hero video composition.
+        Separated completely from fixed floating WhatsApp button located on bottom-right.
       */}
-      <div className="site-container w-full relative z-30 flex justify-end">
+      <div className="site-container w-full relative z-30 flex justify-start">
         <SpeakerToggle
           isMuted={isMuted}
           onToggle={handleToggleMute}

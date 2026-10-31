@@ -53,19 +53,6 @@ export default function SpeakerToggle({
         className
       )}
     >
-      {/* Editorial Clip Info & Pagination Indicator */}
-      {currentProjectTitle && typeof currentProjectIndex === 'number' && totalProjects && (
-        <div className="hidden sm:flex flex-col items-end pr-1 text-right pointer-events-none drop-shadow-md">
-          <div className="flex items-center gap-1.5 text-[9px] font-mono tracking-widest text-accent font-semibold uppercase">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-            <span>HERO REEL · 0{currentProjectIndex + 1} / 0{totalProjects}</span>
-          </div>
-          <span className="text-[11px] font-mono font-medium text-white/80 tracking-wider uppercase truncate max-w-[220px]">
-            {currentProjectTitle}
-          </span>
-        </div>
-      )}
-
       {/* Main Interactive Toggle Button Container */}
       <div className="relative group">
         {/* Floating Tooltip */}
@@ -74,7 +61,7 @@ export default function SpeakerToggle({
           id="speaker-toggle-tooltip"
           aria-hidden={!isHovered}
           className={cn(
-            'absolute bottom-full mb-2.5 right-0 sm:right-auto sm:left-1/2 sm:-translate-x-1/2',
+            'absolute bottom-full mb-2.5 left-0 sm:left-1/2 sm:-translate-x-1/2',
             'px-2.5 py-1 rounded bg-[#0b0b10]/95 border border-white/15 text-[10px] font-mono uppercase tracking-wider text-white whitespace-nowrap shadow-2xl pointer-events-none backdrop-blur-md transition-all duration-200',
             isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-1'
           )}
@@ -142,6 +129,19 @@ export default function SpeakerToggle({
           </motion.div>
         </motion.button>
       </div>
+
+      {/* Editorial Clip Info & Pagination Indicator */}
+      {currentProjectTitle && typeof currentProjectIndex === 'number' && totalProjects && (
+        <div className="hidden sm:flex flex-col items-start pl-1 text-left pointer-events-none drop-shadow-md">
+          <div className="flex items-center gap-1.5 text-[9px] font-mono tracking-widest text-accent font-semibold uppercase">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+            <span>HERO REEL · 0{currentProjectIndex + 1} / 0{totalProjects}</span>
+          </div>
+          <span className="text-[11px] font-mono font-medium text-white/80 tracking-wider uppercase truncate max-w-[220px]">
+            {currentProjectTitle}
+          </span>
+        </div>
+      )}
     </div>
   );
 }

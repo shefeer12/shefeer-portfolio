@@ -94,16 +94,16 @@ export default function Home() {
       />
 
       {/* Floating Quick WhatsApp Trigger with GlassSurface */}
-      <div className="fixed bottom-6 right-6 z-30">
+      <div className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-40 pb-[env(safe-area-inset-bottom)] pr-[env(safe-area-inset-right)]">
         <GlassSurface intensity="deep" glowOnHover className="rounded-full shadow-2xl shadow-accent/20">
           <a
             href={floatingWhatsAppUrl}
             target="_blank"
             rel="noreferrer"
-            className="p-3.5 rounded-full bg-accent text-black hover:scale-105 active:scale-95 transition-transform flex items-center justify-center block"
+            className="p-3 sm:p-3.5 rounded-full bg-accent text-black hover:scale-105 active:scale-95 transition-transform flex items-center justify-center block"
             aria-label="Direct message Shefeer on WhatsApp"
           >
-            <MessageSquare className="w-5 h-5 fill-current" />
+            <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 fill-current" />
           </a>
         </GlassSurface>
       </div>
