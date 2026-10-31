@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { motion, useInView } from 'motion/react';
+import { motion, useInView, useReducedMotion } from 'motion/react';
 import { cn } from '@/lib/utils';
 
 export interface AnimatedContentProps {
@@ -28,7 +28,17 @@ export default function AnimatedContent({
   className = ''
 }: AnimatedContentProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: '-50px' });
+  const prefersReducedMotion = useReducedMotion();
+  // Positive margin triggers reveal slightly BEFORE element enters viewport, avoiding blank screen on mobile
+  const isInView = useInView(ref, { once: true, margin: '150px 0px 150px 0px' });
+
+  if (prefersReducedMotion) {
+    return (
+      <div ref={ref} className={cn(className)}>
+        {children}
+      </div>
+    );
+  }
 
   const initialX = direction === 'horizontal' ? (reverse ? -distance : distance) : 0;
   const initialY = direction === 'vertical' ? (reverse ? -distance : distance) : 0;
