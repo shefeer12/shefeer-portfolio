@@ -1,14 +1,14 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
+import { motion, useScroll, useTransform, useReducedMotion } from 'motion/react';
 import { siteConfig } from '@/lib/site-config';
 import { getHeroRotationProjects, type Project } from '@/lib/projects';
 import CinematicHeroBackground from '@/components/CinematicHeroBackground';
 import SpeakerToggle from '@/components/SpeakerToggle';
 import Grainient from '@/components/reactbits/Grainient';
 import RotatingText from '@/components/reactbits/RotatingText';
-import ScrollReveal from '@/components/reactbits/ScrollReveal';
 import VariableProximity from '@/components/reactbits/VariableProximity';
 
 interface HeroProps {
@@ -18,6 +18,17 @@ interface HeroProps {
 
 export default function Hero({ onOpenShowreel, isPaused = false }: HeroProps) {
   const rotationProjects = getHeroRotationProjects();
+  const heroRef = useRef<HTMLElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+
+  // Scroll scrub: as user scrolls out of hero, foreground content drifts up slightly and fades
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start']
+  });
+
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 0.75], [0, -44]);
 
   // Unified audio state: Starts muted for cross-browser autoplay compliance
   const [isMuted, setIsMuted] = useState<boolean>(true);
@@ -48,6 +59,7 @@ export default function Hero({ onOpenShowreel, isPaused = false }: HeroProps) {
   return (
     <section
       id="home"
+      ref={heroRef}
       className="relative min-h-[94vh] lg:min-h-[96vh] pt-28 sm:pt-32 pb-12 sm:pb-16 flex flex-col justify-between overflow-hidden bg-[#070709]"
     >
       {/* React Bits: Grainient Atmospheric Flow Canvas */}
@@ -76,8 +88,14 @@ export default function Hero({ onOpenShowreel, isPaused = false }: HeroProps) {
         onAudioError={handleAudioError}
       />
 
-      {/* Foreground Hero Content Container */}
-      <div className="site-container w-full flex-grow flex flex-col justify-center relative z-20 py-8 lg:py-12">
+      {/* Foreground Hero Content Container with Scroll Scrub (drifts up slightly and fades) */}
+      <motion.div
+        style={{
+          opacity: prefersReducedMotion ? 1 : heroOpacity,
+          y: prefersReducedMotion ? 0 : heroY
+        }}
+        className="site-container w-full flex-grow flex flex-col justify-center relative z-20 py-8 lg:py-12"
+      >
         <div className="max-w-xl lg:max-w-2xl xl:max-w-3xl space-y-6 sm:space-y-8">
           {/* Availability & Role Status */}
           <div className="flex flex-wrap items-center gap-3 text-xs font-mono tracking-widest text-muted">
@@ -96,29 +114,27 @@ export default function Hero({ onOpenShowreel, isPaused = false }: HeroProps) {
           {/* Oversized Editorial Headline with VariableProximity (Interactive Logo Hover Effect) */}
           <div className="space-y-3">
             <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-[5.5rem] font-black tracking-tighter leading-[0.9] text-white uppercase font-sans drop-shadow-sm">
-              <ScrollReveal baseOpacity={0.4} enableBlur={true} blurStrength={3}>
-                <div className="flex flex-col items-start">
-                  {/* Proximity-interactive main phrase: letters dynamically swell and glow orange near cursor */}
+              <div className="flex flex-col items-start">
+                {/* Proximity-interactive main phrase: letters dynamically swell and glow orange near cursor */}
+                <VariableProximity
+                  label="I MAKE EVERY FRAME"
+                  fromFontWeight={800}
+                  toFontWeight={950}
+                  radius={110}
+                  className="text-white tracking-tighter cursor-default"
+                />
+                {/* Accent punchline: letters dynamically swell and illuminate near cursor */}
+                <div className="mt-1 sm:mt-2">
                   <VariableProximity
-                    label="I MAKE EVERY FRAME"
+                    label="MATTER."
                     fromFontWeight={800}
                     toFontWeight={950}
                     radius={110}
-                    className="text-white tracking-tighter cursor-default"
+                    hoverColor="#ffffff"
+                    className="text-accent tracking-tighter underline decoration-white/10 underline-offset-8 cursor-default"
                   />
-                  {/* Accent punchline: letters dynamically swell and illuminate near cursor */}
-                  <div className="mt-1 sm:mt-2">
-                    <VariableProximity
-                      label="MATTER."
-                      fromFontWeight={800}
-                      toFontWeight={950}
-                      radius={110}
-                      hoverColor="#ffffff"
-                      className="text-accent tracking-tighter underline decoration-white/10 underline-offset-8 cursor-default"
-                    />
-                  </div>
                 </div>
-              </ScrollReveal>
+              </div>
             </h1>
 
             {/* React Bits: RotatingText for confirmed editing categories */}
@@ -179,7 +195,7 @@ export default function Hero({ onOpenShowreel, isPaused = false }: HeroProps) {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* 
         Animated Speaker Toggle (React Bits Inspired)
