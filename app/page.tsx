@@ -12,6 +12,7 @@ import ContactSection from '@/components/ContactSection';
 import Footer from '@/components/Footer';
 import ProjectModal from '@/components/ProjectModal';
 import SmoothScroll from '@/components/SmoothScroll';
+import ScrollProgress from '@/components/ScrollProgress';
 import Magnetic from '@/components/Magnetic';
 import { getGalleryProjects, type Project } from '@/lib/projects';
 import { getWhatsAppUrl } from '@/lib/site-config';
@@ -74,6 +75,9 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#070709] text-[#f5f3ef] selection:bg-accent selection:text-black">
+      {/* Scroll Progress Bar: Thin orange indicator fixed at top */}
+      <ScrollProgress />
+
       {/* Lenis smooth scrolling (public page only, wheel only, stops when modal open) */}
       <SmoothScroll isPaused={Boolean(selectedProject)} />
 
