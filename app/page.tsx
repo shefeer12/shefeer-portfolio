@@ -11,6 +11,7 @@ import ProcessSection from '@/components/ProcessSection';
 import ContactSection from '@/components/ContactSection';
 import Footer from '@/components/Footer';
 import ProjectModal from '@/components/ProjectModal';
+import SmoothScroll from '@/components/SmoothScroll';
 import { getGalleryProjects, type Project } from '@/lib/projects';
 import { getWhatsAppUrl } from '@/lib/site-config';
 
@@ -55,6 +56,9 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#070709] text-[#f5f3ef] selection:bg-accent selection:text-black">
+      {/* Lenis smooth scrolling (public page only, wheel only, stops when modal open) */}
+      <SmoothScroll isPaused={Boolean(selectedProject)} />
+
       {/* React Bits: Desktop Target Cursor reticle */}
       <TargetCursor />
 

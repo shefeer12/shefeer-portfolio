@@ -123,10 +123,12 @@ export default function ProjectModal({ project, onClose, onNext, onPrev }: Proje
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-project-title"
+      data-lenis-prevent
       onClick={onClose}
     >
       <div
         ref={modalRef}
+        data-lenis-prevent
         className="relative w-full max-w-6xl xl:max-w-7xl bg-[#08080c] border border-white/10 shadow-2xl rounded-lg overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
