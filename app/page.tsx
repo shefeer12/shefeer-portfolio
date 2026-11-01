@@ -12,6 +12,7 @@ import ContactSection from '@/components/ContactSection';
 import Footer from '@/components/Footer';
 import ProjectModal from '@/components/ProjectModal';
 import SmoothScroll from '@/components/SmoothScroll';
+import Magnetic from '@/components/Magnetic';
 import { getGalleryProjects, type Project } from '@/lib/projects';
 import { getWhatsAppUrl } from '@/lib/site-config';
 
@@ -115,19 +116,21 @@ export default function Home() {
         onPrev={galleryProjects.length > 1 ? handlePrevProject : undefined}
       />
 
-      {/* Floating Quick WhatsApp Trigger with GlassSurface */}
+      {/* Floating Quick WhatsApp Trigger with GlassSurface & Magnetic Effect */}
       <div className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-40 pb-[env(safe-area-inset-bottom)] pr-[env(safe-area-inset-right)]">
-        <GlassSurface intensity="deep" glowOnHover className="rounded-full shadow-2xl shadow-accent/20">
-          <a
-            href={floatingWhatsAppUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="p-3 sm:p-3.5 rounded-full bg-accent text-black hover:scale-105 active:scale-95 transition-transform flex items-center justify-center block"
-            aria-label="Direct message Shefeer on WhatsApp"
-          >
-            <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 fill-current" />
-          </a>
-        </GlassSurface>
+        <Magnetic strength={0.35}>
+          <GlassSurface intensity="deep" glowOnHover className="rounded-full shadow-2xl shadow-accent/20">
+            <a
+              href={floatingWhatsAppUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="p-3 sm:p-3.5 rounded-full bg-accent text-black hover:scale-105 active:scale-95 transition-transform flex items-center justify-center block"
+              aria-label="Direct message Shefeer on WhatsApp"
+            >
+              <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 fill-current" />
+            </a>
+          </GlassSurface>
+        </Magnetic>
       </div>
     </main>
   );

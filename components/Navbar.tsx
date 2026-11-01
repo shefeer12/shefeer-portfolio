@@ -5,6 +5,7 @@ import { ArrowUpRight, Menu, X, Sparkles } from 'lucide-react';
 import { siteConfig } from '@/lib/site-config';
 import VariableProximity from '@/components/reactbits/VariableProximity';
 import GlassSurface from '@/components/reactbits/GlassSurface';
+import Magnetic from '@/components/Magnetic';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -105,15 +106,17 @@ export default function Navbar() {
 
         {/* Right CTA positioned near right responsive gutter */}
         <div className="hidden lg:flex items-center gap-4 flex-shrink-0">
-          <GlassSurface intensity="subtle" glowOnHover>
-            <a
-              href="#contact"
-              className="group flex items-center gap-2 px-5 py-2.5 text-white hover:text-black hover:bg-accent text-xs font-mono tracking-wider uppercase transition-all duration-200"
-            >
-              <span>Start a Project</span>
-              <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </a>
-          </GlassSurface>
+          <Magnetic strength={0.25}>
+            <GlassSurface intensity="subtle" glowOnHover>
+              <a
+                href="#contact"
+                className="group flex items-center gap-2 px-5 py-2.5 text-white hover:text-black hover:bg-accent text-xs font-mono tracking-wider uppercase transition-all duration-200"
+              >
+                <span>Start a Project</span>
+                <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+            </GlassSurface>
+          </Magnetic>
         </div>
 
         {/* Mobile Menu Button */}

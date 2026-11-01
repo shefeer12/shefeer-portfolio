@@ -15,6 +15,7 @@ import { siteConfig, getWhatsAppUrl } from '@/lib/site-config';
 import Reveal from '@/components/Reveal';
 import VariableProximity from '@/components/reactbits/VariableProximity';
 import ProfileCard from '@/components/reactbits/ProfileCard';
+import Magnetic from '@/components/Magnetic';
 
 export default function AboutSection() {
   const directWhatsAppUrl = getWhatsAppUrl(
@@ -239,24 +240,28 @@ export default function AboutSection() {
               </div>
             </div>
 
-            {/* Action Row */}
+            {/* Action Row with Magnetic Effect */}
             <div className="pt-4 flex flex-wrap items-center gap-4">
-              <a
-                href="#contact"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-sm bg-accent text-black font-semibold text-xs uppercase tracking-wider hover:bg-accent-hover transition shadow-lg shadow-accent/20"
-              >
-                <span>Work with Shefeer</span>
-                <ArrowUpRight className="w-4 h-4" />
-              </a>
+              <Magnetic strength={0.3}>
+                <a
+                  href="#contact"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-sm bg-accent text-black font-semibold text-xs uppercase tracking-wider hover:bg-accent-hover transition shadow-lg shadow-accent/20"
+                >
+                  <span>Work with Shefeer</span>
+                  <ArrowUpRight className="w-4 h-4" />
+                </a>
+              </Magnetic>
 
-              <a
-                href={directWhatsAppUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-sm bg-white/5 hover:bg-white/10 border border-white/15 text-white font-mono text-xs uppercase tracking-wider transition"
-              >
-                <span>Direct WhatsApp Chat</span>
-              </a>
+              <Magnetic strength={0.25}>
+                <a
+                  href={directWhatsAppUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-sm bg-white/5 hover:bg-white/10 border border-white/15 text-white font-mono text-xs uppercase tracking-wider transition"
+                >
+                  <span>Direct WhatsApp Chat</span>
+                </a>
+              </Magnetic>
             </div>
           </div>
         </div>

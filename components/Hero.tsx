@@ -10,6 +10,7 @@ import SpeakerToggle from '@/components/SpeakerToggle';
 import Grainient from '@/components/reactbits/Grainient';
 import RotatingText from '@/components/reactbits/RotatingText';
 import VariableProximity from '@/components/reactbits/VariableProximity';
+import Magnetic from '@/components/Magnetic';
 
 interface HeroProps {
   onOpenShowreel?: () => void;
@@ -160,23 +161,27 @@ export default function Hero({ onOpenShowreel, isPaused = false }: HeroProps) {
             {siteConfig.tagline}
           </p>
 
-          {/* Action CTAs */}
+          {/* Action CTAs with Magnetic Effect */}
           <div className="flex flex-wrap items-center gap-4 pt-2">
-            <a
-              href="#work"
-              className="group flex items-center gap-3 px-6 py-3.5 rounded-sm bg-accent text-black font-semibold text-xs uppercase tracking-wider hover:bg-accent-hover transition-all duration-200 shadow-xl shadow-accent/20"
-            >
-              <span>Explore Selected Work</span>
-              <ArrowDown className="w-4 h-4 transition-transform group-hover:translate-y-0.5" />
-            </a>
+            <Magnetic strength={0.3}>
+              <a
+                href="#work"
+                className="group flex items-center gap-3 px-6 py-3.5 rounded-sm bg-accent text-black font-semibold text-xs uppercase tracking-wider hover:bg-accent-hover transition-all duration-200 shadow-xl shadow-accent/20"
+              >
+                <span>Explore Selected Work</span>
+                <ArrowDown className="w-4 h-4 transition-transform group-hover:translate-y-0.5" />
+              </a>
+            </Magnetic>
 
-            <a
-              href="#about"
-              className="group flex items-center gap-3 px-6 py-3.5 rounded-sm border border-white/20 hover:border-accent bg-white/5 text-white hover:text-accent text-xs font-mono uppercase tracking-wider transition-all duration-200 backdrop-blur-sm"
-            >
-              <span>About Shefeer</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-accent transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </a>
+            <Magnetic strength={0.25}>
+              <a
+                href="#about"
+                className="group flex items-center gap-3 px-6 py-3.5 rounded-sm border border-white/20 hover:border-accent bg-white/5 text-white hover:text-accent text-xs font-mono uppercase tracking-wider transition-all duration-200 backdrop-blur-sm"
+              >
+                <span>About Shefeer</span>
+                <ArrowUpRight className="w-3.5 h-3.5 text-accent transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+            </Magnetic>
           </div>
 
           {/* Editorial Footer Strip */}
