@@ -7,7 +7,6 @@ import { getGalleryProjects, projectCategories, type Project, type ProjectFilter
 import ProjectCard from '@/components/ProjectCard';
 import Reveal from '@/components/Reveal';
 import TiltedCard from '@/components/reactbits/TiltedCard';
-import AnimatedContent from '@/components/reactbits/AnimatedContent';
 import Masonry from '@/components/reactbits/Masonry';
 
 interface WorkGalleryProps {
@@ -117,7 +116,13 @@ export default function WorkGallery({ onSelectProject }: WorkGalleryProps) {
 
                 if (isTiltedFeatured) {
                   return (
-                    <AnimatedContent delay={index * 0.08} duration={0.5}>
+                    <Reveal
+                      key={project.id}
+                      staggerIndex={index % 3}
+                      delay={Math.min(index * 0.04, 0.2)}
+                      margin="180px 0px -20px 0px"
+                      className="h-full"
+                    >
                       <TiltedCard
                         maxTilt={6}
                         scaleOnHover={1.02}
@@ -131,18 +136,24 @@ export default function WorkGallery({ onSelectProject }: WorkGalleryProps) {
                           onSelect={onSelectProject}
                         />
                       </TiltedCard>
-                    </AnimatedContent>
+                    </Reveal>
                   );
                 }
 
                 return (
-                  <AnimatedContent delay={index * 0.06} duration={0.5}>
+                  <Reveal
+                    key={project.id}
+                    staggerIndex={index % 3}
+                    delay={Math.min(index * 0.04, 0.2)}
+                    margin="180px 0px -20px 0px"
+                    className="h-full"
+                  >
                     <ProjectCard
                       project={project}
                       index={index}
                       onSelect={onSelectProject}
                     />
-                  </AnimatedContent>
+                  </Reveal>
                 );
               }}
             />

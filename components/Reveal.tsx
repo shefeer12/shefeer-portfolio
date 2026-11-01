@@ -9,6 +9,7 @@ export interface RevealProps {
   staggerIndex?: number;
   className?: string;
   width?: 'fit-content' | '100%';
+  margin?: string;
 }
 
 // Unified timing requested in Prompt 10: translateY ~16px + opacity, 0.8s, expo/power4 out (ease: [0.16, 1, 0.3, 1])
@@ -21,13 +22,14 @@ export default function Reveal({
   delay = 0,
   staggerIndex = 0,
   className = '',
-  width = '100%'
+  width = '100%',
+  margin = '180px 0px -20px 0px'
 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, {
     once: true,
     // Positive margin so reveal triggers smoothly before/as element approaches viewport
-    margin: '80px 0px -20px 0px'
+    margin: margin as any
   });
   const prefersReducedMotion = useReducedMotion();
 
