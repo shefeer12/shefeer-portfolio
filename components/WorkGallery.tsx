@@ -5,7 +5,7 @@ import { motion, useReducedMotion } from 'motion/react';
 import { ArrowUpRight, Film, SlidersHorizontal } from 'lucide-react';
 import { getGalleryProjects, projectCategories, type Project, type ProjectFilterCategory } from '@/lib/projects';
 import ProjectCard from '@/components/ProjectCard';
-import ScrollReveal from '@/components/reactbits/ScrollReveal';
+import Reveal from '@/components/Reveal';
 import TiltedCard from '@/components/reactbits/TiltedCard';
 import AnimatedContent from '@/components/reactbits/AnimatedContent';
 import Masonry from '@/components/reactbits/Masonry';
@@ -27,26 +27,27 @@ export default function WorkGallery({ onSelectProject }: WorkGalleryProps) {
   return (
     <section id="work" className="py-24 sm:py-32 relative border-t border-white/10">
       <div className="site-container">
-        {/* Section Heading with ScrollReveal */}
+        {/* Section Heading with Reveal */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-white/10 pb-8">
           <div>
             <div className="flex items-center gap-2 text-xs font-mono tracking-widest text-accent uppercase mb-3">
               <Film className="w-3.5 h-3.5" />
               <span>01 // SELECTED WORK</span>
             </div>
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white uppercase font-sans">
-              <ScrollReveal baseOpacity={0.3} enableBlur={true}>
-                THE WORK
-              </ScrollReveal>{' '}
-              <br />
-              <span className="text-accent">SPEAKS.</span>
-            </h2>
+            <Reveal>
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white uppercase font-sans">
+                THE WORK <br />
+                <span className="text-accent">SPEAKS.</span>
+              </h2>
+            </Reveal>
           </div>
 
           <div className="max-w-md">
-            <p className="text-sm text-white/70 leading-relaxed font-light">
-              Crafted primarily for 9:16 vertical displays. Every project is built around rhythm, emotional connection, and retention architecture.
-            </p>
+            <Reveal delay={0.08}>
+              <p className="text-sm text-white/70 leading-relaxed font-light">
+                Crafted primarily for 9:16 vertical displays. Every project is built around rhythm, emotional connection, and retention architecture.
+              </p>
+            </Reveal>
           </div>
         </div>
 

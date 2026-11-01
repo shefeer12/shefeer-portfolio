@@ -2,8 +2,7 @@
 
 import React from 'react';
 import { Clapperboard } from 'lucide-react';
-import ScrollReveal from '@/components/reactbits/ScrollReveal';
-import AnimatedContent from '@/components/reactbits/AnimatedContent';
+import Reveal from '@/components/Reveal';
 import GlassSurface from '@/components/reactbits/GlassSurface';
 
 interface ProcessStep {
@@ -42,38 +41,36 @@ export default function ProcessSection() {
   return (
     <section id="process" className="py-24 sm:py-32 relative bg-[#07070a] border-t border-white/10">
       <div className="site-container">
-        {/* Header with ScrollReveal */}
+        {/* Header with Reveal */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 border-b border-white/10 pb-8">
           <div>
             <div className="flex items-center gap-2 text-xs font-mono tracking-widest text-accent uppercase mb-3">
               <Clapperboard className="w-3.5 h-3.5" />
               <span>04 // 3-STEP PROCESS</span>
             </div>
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white uppercase font-sans">
-              <ScrollReveal baseOpacity={0.3} enableBlur={true}>
-                HOW WE
-              </ScrollReveal>{' '}
-              <br />
-              <span className="text-accent">COLLABORATE.</span>
-            </h2>
+            <Reveal>
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white uppercase font-sans">
+                HOW WE <br />
+                <span className="text-accent">COLLABORATE.</span>
+              </h2>
+            </Reveal>
           </div>
 
           <div className="max-w-md">
-            <p className="text-sm text-white/70 leading-relaxed font-light">
-              A transparent, friction-free three-stage workflow taking raw footage from camera cards to high-performing vertical cuts.
-            </p>
+            <Reveal delay={0.08}>
+              <p className="text-sm text-white/70 leading-relaxed font-light">
+                A transparent, friction-free three-stage workflow taking raw footage from camera cards to high-performing vertical cuts.
+              </p>
+            </Reveal>
           </div>
         </div>
 
-        {/* 3-Step Process Grid with AnimatedContent */}
+        {/* 3-Step Process Grid with Reveal */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {steps.map((item, index) => (
-            <AnimatedContent
+            <Reveal
               key={item.step}
-              direction="vertical"
-              distance={20}
-              delay={index * 0.1}
-              duration={0.5}
+              staggerIndex={index}
             >
               <GlassSurface
                 intensity="subtle"
@@ -111,7 +108,7 @@ export default function ProcessSection() {
                   <span>{item.actionItem}</span>
                 </div>
               </GlassSurface>
-            </AnimatedContent>
+            </Reveal>
           ))}
         </div>
 

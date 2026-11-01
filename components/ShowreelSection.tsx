@@ -5,9 +5,8 @@ import { Film, Play, Sparkles, Volume2, Wand2, Info } from 'lucide-react';
 import VideoPlayer from '@/components/VideoPlayer';
 import { siteConfig } from '@/lib/site-config';
 import { projects } from '@/lib/projects';
-import ScrollReveal from '@/components/reactbits/ScrollReveal';
+import Reveal from '@/components/Reveal';
 import GlassSurface from '@/components/reactbits/GlassSurface';
-import AnimatedContent from '@/components/reactbits/AnimatedContent';
 import DriftWall from '@/components/reactbits/DriftWall';
 
 export default function ShowreelSection() {
@@ -31,26 +30,27 @@ export default function ShowreelSection() {
       </div>
 
       <div className="site-container relative z-10">
-        {/* Section Header with ScrollReveal */}
+        {/* Section Header with Reveal */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 border-b border-white/10 pb-8">
           <div>
             <div className="flex items-center gap-2 text-xs font-mono tracking-widest text-accent uppercase mb-3">
               <Film className="w-3.5 h-3.5" />
               <span>02 // CINEMATIC REEL</span>
             </div>
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white uppercase font-sans">
-              <ScrollReveal baseOpacity={0.3} enableBlur={true}>
-                THE 9:16
-              </ScrollReveal>{' '}
-              <br />
-              <span className="text-accent">SHOWREEL.</span>
-            </h2>
+            <Reveal>
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white uppercase font-sans">
+                THE 9:16 <br />
+                <span className="text-accent">SHOWREEL.</span>
+              </h2>
+            </Reveal>
           </div>
 
           <div className="max-w-md">
-            <p className="text-sm text-white/70 leading-relaxed font-light">
-              A curated reel of vertical moments demonstrating pacing, hook engineering, seamless match cuts, sound design, and color finishing.
-            </p>
+            <Reveal delay={0.08}>
+              <p className="text-sm text-white/70 leading-relaxed font-light">
+                A curated reel of vertical moments demonstrating pacing, hook engineering, seamless match cuts, sound design, and color finishing.
+              </p>
+            </Reveal>
           </div>
         </div>
 
@@ -58,7 +58,7 @@ export default function ShowreelSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Left Column: Editorial Specs & Creative Philosophy */}
           <div className="lg:col-span-4 space-y-6 order-2 lg:order-1">
-            <AnimatedContent direction="vertical" distance={20} duration={0.6}>
+            <Reveal staggerIndex={0}>
               <GlassSurface intensity="medium" className="p-6 rounded space-y-4">
                 <p className="text-[10px] uppercase font-mono tracking-widest text-accent flex items-center gap-1.5">
                   <Sparkles className="w-3 h-3" /> Technical Master Specs
@@ -87,9 +87,9 @@ export default function ShowreelSection() {
                   </div>
                 </div>
               </GlassSurface>
-            </AnimatedContent>
+            </Reveal>
 
-            <AnimatedContent direction="vertical" distance={20} delay={0.1} duration={0.6}>
+            <Reveal staggerIndex={1}>
               <div className="p-6 bg-white/[0.02] border border-white/5 rounded space-y-2">
                 <p className="text-xs font-serif italic text-white/80 leading-relaxed">
                   &ldquo;Every cut must serve the emotion. If a frame does not heighten curiosity or push the story forward, it gets discarded.&rdquo;
@@ -98,7 +98,7 @@ export default function ShowreelSection() {
                   — MUHAMMED SHEFEER
                 </p>
               </div>
-            </AnimatedContent>
+            </Reveal>
 
             {/* Clearly labeled configuration note for the client */}
             <div className="p-4 bg-accent/5 border border-accent/20 rounded flex items-start gap-3 text-xs">

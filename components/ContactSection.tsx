@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { siteConfig, getWhatsAppUrl, getMailtoUrl } from '@/lib/site-config';
 import InquiryForm from '@/components/InquiryForm';
-import ScrollReveal from '@/components/reactbits/ScrollReveal';
+import Reveal from '@/components/Reveal';
 import CursorGrid from '@/components/reactbits/CursorGrid';
 import GlassSurface from '@/components/reactbits/GlassSurface';
 
@@ -38,21 +38,22 @@ export default function ContactSection() {
                 <MessageCircle className="w-3.5 h-3.5" />
                 <span>05 // INITIATE COLLABORATION</span>
               </div>
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white uppercase font-sans leading-tight">
-                <ScrollReveal baseOpacity={0.3} enableBlur={true}>
-                  HAVE FOOTAGE?
-                </ScrollReveal>{' '}
-                <br />
-                LET&apos;S MAKE IT <br />
-                <span className="text-accent underline decoration-white/10 underline-offset-8">
-                  UNFORGETTABLE.
-                </span>
-              </h2>
+              <Reveal>
+                <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white uppercase font-sans leading-tight">
+                  HAVE FOOTAGE? <br />
+                  LET&apos;S MAKE IT <br />
+                  <span className="text-accent underline decoration-white/10 underline-offset-8">
+                    UNFORGETTABLE.
+                  </span>
+                </h2>
+              </Reveal>
             </div>
 
-            <p className="text-base text-white/70 font-light leading-relaxed max-w-lg">
-              Whether you need high-retention vertical cuts for a product launch, a creator channel needing consistent Reels & Shorts, or a cinematic brand film — let&apos;s talk rhythm, hook, and story.
-            </p>
+            <Reveal delay={0.08}>
+              <p className="text-base text-white/70 font-light leading-relaxed max-w-lg">
+                Whether you need high-retention vertical cuts for a product launch, a creator channel needing consistent Reels & Shorts, or a cinematic brand film — let&apos;s talk rhythm, hook, and story.
+              </p>
+            </Reveal>
 
             {/* Direct Contact Cards with GlassSurface */}
             <div className="space-y-4 pt-2">

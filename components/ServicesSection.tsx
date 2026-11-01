@@ -2,8 +2,7 @@
 
 import React from 'react';
 import { ArrowUpRight, Zap } from 'lucide-react';
-import ScrollReveal from '@/components/reactbits/ScrollReveal';
-import AnimatedContent from '@/components/reactbits/AnimatedContent';
+import Reveal from '@/components/Reveal';
 import GlassSurface from '@/components/reactbits/GlassSurface';
 import { getWhatsAppUrl } from '@/lib/site-config';
 
@@ -122,38 +121,37 @@ export default function ServicesSection() {
   return (
     <section id="services" className="py-24 sm:py-32 relative border-t border-white/10">
       <div className="site-container">
-        {/* Section Heading with ScrollReveal */}
+        {/* Section Heading with Unified Reveal */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 border-b border-white/10 pb-8">
           <div>
             <div className="flex items-center gap-2 text-xs font-mono tracking-widest text-accent uppercase mb-3">
               <Zap className="w-3.5 h-3.5" />
               <span>02 // SERVICES & CAPABILITIES</span>
             </div>
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white uppercase font-sans">
-              <ScrollReveal baseOpacity={0.3} enableBlur={true}>
-                SERVICES
-              </ScrollReveal>{' '}
-              <br />
-              <span className="text-accent">& CAPABILITIES.</span>
-            </h2>
+            <Reveal>
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white uppercase font-sans">
+                SERVICES <br />
+                <span className="text-accent">& CAPABILITIES.</span>
+              </h2>
+            </Reveal>
           </div>
 
           <div className="max-w-md">
-            <p className="text-sm text-white/70 leading-relaxed font-light">
-              Tailored video editing for creators and businesses in India and internationally. Every cut is intentional, platform-native, and crafted to connect.
-            </p>
+            <Reveal delay={0.08}>
+              <p className="text-sm text-white/70 leading-relaxed font-light">
+                Tailored video editing for creators and businesses in India and internationally. Every cut is intentional, platform-native, and crafted to connect.
+              </p>
+            </Reveal>
           </div>
         </div>
 
         {/* 8 Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {services.map((service, index) => (
-            <AnimatedContent
+            <Reveal
               key={service.number}
-              direction="vertical"
-              distance={20}
-              delay={index * 0.04}
-              duration={0.4}
+              staggerIndex={index % 2}
+              delay={Math.floor(index / 2) * 0.05}
             >
               <GlassSurface
                 intensity="subtle"
@@ -212,7 +210,7 @@ export default function ServicesSection() {
                   </a>
                 </div>
               </GlassSurface>
-            </AnimatedContent>
+            </Reveal>
           ))}
         </div>
 

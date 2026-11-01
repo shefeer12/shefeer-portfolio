@@ -12,8 +12,7 @@ import {
   Wand2
 } from 'lucide-react';
 import { siteConfig, getWhatsAppUrl } from '@/lib/site-config';
-import ScrollReveal from '@/components/reactbits/ScrollReveal';
-import AnimatedContent from '@/components/reactbits/AnimatedContent';
+import Reveal from '@/components/Reveal';
 import VariableProximity from '@/components/reactbits/VariableProximity';
 import ProfileCard from '@/components/reactbits/ProfileCard';
 
@@ -72,8 +71,8 @@ export default function AboutSection() {
               <span>03 // ABOUT SHEFEER</span>
             </div>
 
-            {/* React Bits: Interactive 3D Holographic ProfileCard */}
-            <AnimatedContent direction="vertical" distance={20} duration={0.6}>
+            {/* Interactive 3D Holographic ProfileCard */}
+            <Reveal>
               <div className="relative group flex flex-col items-center lg:items-start">
                 {/* Filmic Ambient Glow behind card */}
                 <div className="absolute -inset-2 bg-gradient-to-b from-accent/25 via-accent/5 to-transparent rounded-2xl blur-xl opacity-50 group-hover:opacity-80 transition duration-500 pointer-events-none" />
@@ -157,7 +156,7 @@ export default function AboutSection() {
                   </div>
                 </div>
               </div>
-            </AnimatedContent>
+            </Reveal>
           </div>
 
           {/* Right Column: Bio, Philosophy & Editing Specialties */}
@@ -167,42 +166,42 @@ export default function AboutSection() {
                 CRAFT & PHILOSOPHY
               </p>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight uppercase font-sans leading-tight">
-                <ScrollReveal baseOpacity={0.3} enableBlur={true}>
-                  <div className="flex flex-col items-start">
+                <div className="flex flex-col items-start">
+                  <VariableProximity
+                    label="TURNING RAW FOOTAGE"
+                    fromFontWeight={800}
+                    toFontWeight={950}
+                    radius={90}
+                    className="text-white tracking-tight cursor-default"
+                  />
+                  <div className="mt-1">
                     <VariableProximity
-                      label="TURNING RAW FOOTAGE"
+                      label="INTO STORIES THAT CONNECT."
                       fromFontWeight={800}
                       toFontWeight={950}
                       radius={90}
-                      className="text-white tracking-tight cursor-default"
+                      hoverColor="#ffffff"
+                      className="text-accent tracking-tight cursor-default"
                     />
-                    <div className="mt-1">
-                      <VariableProximity
-                        label="INTO STORIES THAT CONNECT."
-                        fromFontWeight={800}
-                        toFontWeight={950}
-                        radius={90}
-                        hoverColor="#ffffff"
-                        className="text-accent tracking-tight cursor-default"
-                      />
-                    </div>
                   </div>
-                </ScrollReveal>
+                </div>
               </h2>
             </div>
 
-            {/* Authentic, Client-Focused Bio Copy */}
-            <div className="space-y-4 text-sm sm:text-base text-white/80 font-light leading-relaxed">
-              <p>
-                I’m <span className="text-white font-medium">Muhammed Shefeer K</span>, a freelance video editor based in <span className="text-white font-medium">Kochi, Kerala, India</span>. I help creators and businesses turn raw footage into polished, engaging videos for digital platforms.
-              </p>
-              <p>
-                From short-form reels to longer videos, I focus on strong pacing, thoughtful cuts, clean visuals, and storytelling that keeps the audience interested.
-              </p>
-              <p className="text-white/70">
-                Every project has its own story. My goal is to understand your vision and shape the footage into a video that feels clear, intentional, and true to your message.
-              </p>
-            </div>
+            {/* Authentic, Client-Focused Bio Copy with Reveal */}
+            <Reveal delay={0.08}>
+              <div className="space-y-4 text-sm sm:text-base text-white/80 font-light leading-relaxed">
+                <p>
+                  I’m <span className="text-white font-medium">Muhammed Shefeer K</span>, a freelance video editor based in <span className="text-white font-medium">Kochi, Kerala, India</span>. I help creators and businesses turn raw footage into polished, engaging videos for digital platforms.
+                </p>
+                <p>
+                  From short-form reels to longer videos, I focus on strong pacing, thoughtful cuts, clean visuals, and storytelling that keeps the audience interested.
+                </p>
+                <p className="text-white/70">
+                  Every project has its own story. My goal is to understand your vision and shape the footage into a video that feels clear, intentional, and true to your message.
+                </p>
+              </div>
+            </Reveal>
 
             {/* Editing Specialties Grid */}
             <div className="pt-6 border-t border-white/10 space-y-4">
