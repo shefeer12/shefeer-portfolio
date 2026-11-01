@@ -22,7 +22,24 @@ import GlassSurface from '@/components/reactbits/GlassSurface';
 
 export default function Home() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [clickOrigin, setClickOrigin] = useState<{ x: number; y: number } | null>(null);
   const galleryProjects = getGalleryProjects();
+
+  const handleSelectProject = (project: Project, rect?: DOMRect) => {
+    if (rect) {
+      setClickOrigin({
+        x: Math.round(rect.left + rect.width / 2),
+        y: Math.round(rect.top + rect.height / 2)
+      });
+    } else {
+      setClickOrigin(null);
+    }
+    setSelectedProject(project);
+  };
+
+  const handleCloseProject = () => {
+    setSelectedProject(null);
+  };
 
   const handleNextProject = () => {
     if (!selectedProject || galleryProjects.length <= 1) return;
@@ -69,7 +86,7 @@ export default function Home() {
       <Hero isPaused={Boolean(selectedProject)} />
 
       {/* 3. Full Work Gallery Containing All 12 Existing Videos */}
-      <WorkGallery onSelectProject={(project) => setSelectedProject(project)} />
+      <WorkGallery onSelectProject={handleSelectProject} />
 
       {/* 4. Services */}
       <ServicesSection />
@@ -89,10 +106,11 @@ export default function Home() {
       {/* 8. Footer */}
       <Footer />
 
-      {/* Video Preview Modal with ElasticSlider */}
+      {/* Video Preview Modal with ElasticSlider and Click Origin Animation */}
       <ProjectModal
         project={selectedProject}
-        onClose={() => setSelectedProject(null)}
+        clickOrigin={clickOrigin}
+        onClose={handleCloseProject}
         onNext={galleryProjects.length > 1 ? handleNextProject : undefined}
         onPrev={galleryProjects.length > 1 ? handlePrevProject : undefined}
       />

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import {
   ArrowLeft,
   ArrowRight,
@@ -18,15 +19,23 @@ import { getWhatsAppUrl } from '@/lib/site-config';
 
 interface ProjectModalProps {
   project: Project | null;
+  clickOrigin?: { x: number; y: number } | null;
   onClose: () => void;
   onNext?: () => void;
   onPrev?: () => void;
 }
 
-export default function ProjectModal({ project, onClose, onNext, onPrev }: ProjectModalProps) {
+export default function ProjectModal({
+  project,
+  clickOrigin,
+  onClose,
+  onNext,
+  onPrev
+}: ProjectModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const prefersReducedMotion = useReducedMotion();
 
   // Prevent background scrolling, trap focus, and handle Escape/Arrow keys
   useEffect(() => {
@@ -111,27 +120,56 @@ export default function ProjectModal({ project, onClose, onNext, onPrev }: Proje
     };
   }, [project, onClose, onNext, onPrev]);
 
-  if (!project) return null;
-
-  const inquiryWhatsAppUrl = getWhatsAppUrl(
-    `Hi Shefeer, I watched your edit "${project.title}" (${project.category}) on your portfolio and I would love to discuss a project with you.`
-  );
+  const inquiryWhatsAppUrl = project
+    ? getWhatsAppUrl(
+        `Hi Shefeer, I watched your edit "${project.title}" (${project.category}) on your portfolio and I would love to discuss a project with you.`
+      )
+    : '';
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/90 backdrop-blur-md overflow-y-auto"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="modal-project-title"
-      data-lenis-prevent
-      onClick={onClose}
-    >
-      <div
-        ref={modalRef}
-        data-lenis-prevent
-        className="relative w-full max-w-6xl xl:max-w-7xl bg-[#08080c] border border-white/10 shadow-2xl rounded-lg overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-200"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <AnimatePresence>
+      {project && (
+        <motion.div
+          key="project-modal-backdrop"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{
+            duration: prefersReducedMotion ? 0 : 0.38,
+            ease: [0.16, 1, 0.3, 1]
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/90 backdrop-blur-md overflow-y-auto"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-project-title"
+          data-lenis-prevent
+          onClick={onClose}
+        >
+          <motion.div
+            key={project.id}
+            ref={modalRef}
+            data-lenis-prevent
+            initial={{
+              opacity: prefersReducedMotion ? 1 : 0,
+              scale: prefersReducedMotion ? 1 : 0.88
+            }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{
+              opacity: prefersReducedMotion ? 1 : 0,
+              scale: prefersReducedMotion ? 1 : 0.92
+            }}
+            transition={{
+              duration: prefersReducedMotion ? 0 : 0.4,
+              ease: [0.16, 1, 0.3, 1]
+            }}
+            style={{
+              transformOrigin: clickOrigin
+                ? `${clickOrigin.x}px ${clickOrigin.y}px`
+                : 'center center'
+            }}
+            className="relative w-full max-w-6xl xl:max-w-7xl bg-[#08080c] border border-white/10 shadow-2xl rounded-lg overflow-hidden my-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
         {/* Sleek, accessible close button */}
         <button
           ref={closeButtonRef}
@@ -327,7 +365,9 @@ export default function ProjectModal({ project, onClose, onNext, onPrev }: Proje
             </div>
           </div>
         </div>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

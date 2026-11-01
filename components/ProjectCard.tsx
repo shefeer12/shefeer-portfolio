@@ -8,7 +8,7 @@ import { getPosterUrl, getPreviewVideoUrl } from '@/lib/cloudinary-url';
 interface ProjectCardProps {
   project: Project;
   index: number;
-  onSelect: (project: Project) => void;
+  onSelect: (project: Project, rect?: DOMRect) => void;
 }
 
 export default function ProjectCard({ project, index, onSelect }: ProjectCardProps) {
@@ -95,13 +95,17 @@ export default function ProjectCard({ project, index, onSelect }: ProjectCardPro
       ref={cardRef}
       data-cursor-label="PLAY"
       className="group relative flex flex-col cursor-pointer bg-card/60 border border-white/8 hover:border-accent/40 rounded-sm overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-accent/5 hover:-translate-y-1"
-      onClick={() => onSelect(project)}
+      onClick={() => {
+        const rect = cardRef.current?.getBoundingClientRect();
+        onSelect(project, rect);
+      }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          onSelect(project);
+          const rect = cardRef.current?.getBoundingClientRect();
+          onSelect(project, rect);
         }
       }}
       tabIndex={0}

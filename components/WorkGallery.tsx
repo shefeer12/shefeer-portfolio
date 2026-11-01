@@ -10,7 +10,7 @@ import TiltedCard from '@/components/reactbits/TiltedCard';
 import Masonry from '@/components/reactbits/Masonry';
 
 interface WorkGalleryProps {
-  onSelectProject: (project: Project) => void;
+  onSelectProject: (project: Project, rect?: DOMRect) => void;
 }
 
 export default function WorkGallery({ onSelectProject }: WorkGalleryProps) {
