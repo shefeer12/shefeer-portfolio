@@ -27,7 +27,9 @@ export default function InquiryForm() {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [statusMessage, setStatusMessage] = useState<string>('');
 
-  const web3FormsKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || '';
+  const web3FormsKey =
+    process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY ||
+    '68c457ec-66fe-4824-b804-486006e72539';
 
   // Generate formatted message text
   const formattedMessage = `Hi Shefeer, I would like to discuss a video editing project:
@@ -69,27 +71,28 @@ Looking forward to your thoughts and custom quote!`;
     setStatusMessage('');
 
     try {
+      const formData = new FormData();
+      formData.append('access_key', web3FormsKey);
+      formData.append('subject', `New Video Editing Inquiry: ${projectType} from ${name}`);
+      formData.append('from_name', name);
+      formData.append('name', name);
+      formData.append('email', contactInfo.includes('@') ? contactInfo : siteConfig.contact.email);
+      if (contactInfo.includes('@')) {
+        formData.append('replyto', contactInfo);
+      }
+      if (!contactInfo.includes('@')) {
+        formData.append('phone', contactInfo);
+      }
+      formData.append('service', projectType);
+      formData.append('scope', scope);
+      formData.append('footage_status', footageStatus);
+      formData.append('notes', details);
+      formData.append('message', formattedMessage);
+      formData.append('botcheck', '');
+
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify({
-          access_key: web3FormsKey,
-          subject: `New Video Editing Inquiry: ${projectType} from ${name}`,
-          from_name: name,
-          name: name,
-          email: contactInfo.includes('@') ? contactInfo : siteConfig.contact.email,
-          replyto: contactInfo.includes('@') ? contactInfo : undefined,
-          phone: !contactInfo.includes('@') ? contactInfo : undefined,
-          service: projectType,
-          scope: scope,
-          footage_status: footageStatus,
-          notes: details,
-          message: formattedMessage,
-          botcheck: '',
-        }),
+        body: formData,
       });
 
       const data = await response.json();
