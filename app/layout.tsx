@@ -1,12 +1,22 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
-import { siteConfig } from '@/lib/site-config';
+import { siteConfig, SITE_URL } from '@/lib/site-config';
+import JsonLd from '@/components/JsonLd';
+
+const defaultTitle = `${siteConfig.brandName} | ${siteConfig.profession}`;
+const defaultDescription =
+  'Muhammed Shefeer K is a freelance video editor in Kochi, Kerala, crafting high-retention reels, YouTube edits, and cinematic promotional videos.';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://shefeer.runs-on.dev'),
-  alternates: { canonical: '/' },
-  title: `${siteConfig.brandName} — Muhammed Shefeer K | Freelance Video Editor`,
-  description: `${siteConfig.fullName} is a freelance video editor with 2+ years of experience based in Kochi, Kerala, India. Specializing in short-form reels, YouTube editing, podcasts, cinematic edits, and promotional videos.`,
+  metadataBase: new URL(SITE_URL),
+  alternates: {
+    canonical: SITE_URL,
+  },
+  title: {
+    default: defaultTitle,
+    template: `%s | ${siteConfig.brandName}`,
+  },
+  description: defaultDescription,
   keywords: [
     'Muhammed Shefeer K',
     'Freelance Video Editor',
@@ -19,66 +29,67 @@ export const metadata: Metadata = {
     'Adobe After Effects',
     'CapCut Editor',
     'Color Correction',
-    'Subtitles and Captions'
+    'Subtitles and Captions',
   ],
-  authors: [{ name: siteConfig.fullName }],
+  authors: [{ name: siteConfig.fullName, url: SITE_URL }],
   creator: siteConfig.fullName,
   openGraph: {
     type: 'website',
-    locale: 'en_US',
-    title: `${siteConfig.brandName} — Muhammed Shefeer K | Freelance Video Editor`,
-    description: 'Turning Raw Footage Into Stories That Connect. Freelance Video Editor based in Kochi, Kerala.',
+    locale: 'en_IN',
+    url: SITE_URL,
+    title: defaultTitle,
+    description: defaultDescription,
     siteName: `${siteConfig.brandName} Portfolio`,
     images: [
       {
-        url: 'https://res.cloudinary.com/hvs5l0qz/video/upload/so_0,f_auto,q_auto,w_1200,h_630,c_fill/v1793207628/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/01_Social_Media_Reels/Hanansha_home.jpg',
+        url: `${SITE_URL}/og.png`,
         width: 1200,
         height: 630,
-        alt: `${siteConfig.brandName} Video Editor Portfolio`
-      }
-    ]
+        alt: `${siteConfig.fullName} — ${siteConfig.profession} Portfolio`,
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${siteConfig.brandName} — Muhammed Shefeer K | Freelance Video Editor`,
-    description: 'Turning Raw Footage Into Stories That Connect. Freelance Video Editor based in Kochi, Kerala.',
-    images: ['https://res.cloudinary.com/hvs5l0qz/video/upload/so_0,f_auto,q_auto,w_1200,h_630,c_fill/v1793207628/Muhammed%20Shefeer%20K%20%7C%20Video%20Editing%20Portfolio/01_Social_Media_Reels/Hanansha_home.jpg']
+    title: defaultTitle,
+    description: defaultDescription,
+    images: [`${SITE_URL}/og.png`],
+    creator: '@reefehs_',
   },
   robots: {
     index: true,
-    follow: true
-  }
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? {
+        google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+      }
+    : undefined,
 };
 
 export const viewport: Viewport = {
   themeColor: '#070709',
   colorScheme: 'dark',
   width: 'device-width',
-  initialScale: 1
+  initialScale: 1,
 };
 
 export default function RootLayout({
-  children
+  children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: siteConfig.fullName,
-    alternateName: siteConfig.brandName,
-    jobTitle: siteConfig.profession,
-    description: siteConfig.tagline,
-    knowsAbout: siteConfig.skills
-  };
-
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark scroll-smooth">
       <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        <JsonLd />
       </head>
       <body className="bg-[#070709] text-[#f5f3ef] antialiased min-h-screen">
         {children}

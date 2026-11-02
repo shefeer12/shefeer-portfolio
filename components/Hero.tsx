@@ -114,8 +114,9 @@ export default function Hero({ onOpenShowreel, isPaused = false }: HeroProps) {
 
           {/* Oversized Editorial Headline with VariableProximity (Interactive Logo Hover Effect) */}
           <div className="space-y-3">
-            <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-[5.5rem] font-black tracking-tighter leading-[0.9] text-white uppercase font-sans drop-shadow-sm">
-              <div className="flex flex-col items-start">
+            <h1 aria-label="I Make Every Frame Matter." className="text-4xl sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-[5.5rem] font-black tracking-tighter leading-[0.9] text-white uppercase font-sans drop-shadow-sm">
+              <span className="sr-only">I Make Every Frame Matter.</span>
+              <div aria-hidden="true" className="flex flex-col items-start">
                 {/* Proximity-interactive main phrase: letters dynamically swell and glow orange near cursor */}
                 <VariableProximity
                   label="I MAKE EVERY FRAME"

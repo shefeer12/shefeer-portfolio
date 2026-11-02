@@ -353,7 +353,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             <span className="profile-card__holo-shift" />
           </span>
           {avatarUrl && (
-            <img className="profile-card__photo" src={avatarUrl} alt={name || ''} loading="lazy" draggable={false} />
+            <img className="profile-card__photo" src={avatarUrl} alt={name || 'Muhammed Shefeer K — Freelance Video Editor'} width={400} height={500} loading="lazy" draggable={false} />
           )}
           {(name || title) && (
             <>
@@ -371,7 +371,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           <div className="profile-card__footer">
             {miniAvatarUrl && (
               <span className="profile-card__avatar">
-                <img src={miniAvatarUrl} alt="" loading="lazy" draggable={false} />
+                <img src={miniAvatarUrl} alt="" aria-hidden="true" width={48} height={48} loading="lazy" draggable={false} />
               </span>
             )}
             <div className="profile-card__meta">

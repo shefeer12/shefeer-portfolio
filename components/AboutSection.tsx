@@ -227,9 +227,9 @@ export default function AboutSection() {
                         <div className="w-7 h-7 rounded bg-accent/10 border border-accent/20 text-accent flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
                           <Icon className="w-3.5 h-3.5" />
                         </div>
-                        <h4 className="text-xs font-semibold text-white tracking-wide">
+                        <h3 className="text-xs font-semibold text-white tracking-wide">
                           {spec.title}
-                        </h4>
+                        </h3>
                       </div>
                       <p className="text-[12px] text-white/65 leading-relaxed font-light pl-9.5">
                         {spec.description}

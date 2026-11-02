@@ -6,6 +6,7 @@
  */
 
 export interface SiteConfig {
+  siteUrl: string;
   brandName: string;
   fullName: string;
   profession: string;
@@ -56,7 +57,12 @@ export interface SiteConfig {
   skills: string[];
 }
 
+export const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://shefeer.runs-on.dev'
+).replace(/\/+$/, '');
+
 export const siteConfig: SiteConfig = {
+  siteUrl: SITE_URL,
   brandName: 'SHEFEER',
   fullName: 'Muhammed Shefeer K',
   profession: 'Freelance Video Editor',

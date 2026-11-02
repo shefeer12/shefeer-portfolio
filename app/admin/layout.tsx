@@ -1,22 +1,20 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Admin Dashboard — Shefeer Video Portfolio',
-  description: 'Private administration console for managing video portfolio projects.',
+  title: 'Admin Dashboard',
+  description:
+    'Private administration portal for Muhammed Shefeer K video editing portfolio management.',
   robots: {
     index: false,
-    follow: false
-  }
+    follow: false,
+    nocache: true,
+  },
 };
 
 export default function AdminLayout({
-  children
+  children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="min-h-screen bg-[#070709] text-[#f5f3ef]">
-      {children}
-    </div>
-  );
+  return <>{children}</>;
 }
