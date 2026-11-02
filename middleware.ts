@@ -4,7 +4,36 @@ import type { NextRequest } from 'next/server';
 const ADMIN_COOKIE_NAME = 'shefeer_admin_session';
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, search } = request.nextUrl;
+  const host = (request.headers.get('host') || '').toLowerCase();
+  const isLocal = host.includes('localhost') || host.includes('127.0.0.1');
+
+  // Domain routing: Primary showcase (shefeer.runs-on.dev) and Admin host (shefeer.vercel.app)
+  if (!isLocal) {
+    const isAssetOrInternal =
+      pathname.startsWith('/_next') ||
+      pathname.startsWith('/assets') ||
+      pathname === '/icon.svg' ||
+      pathname === '/robots.txt';
+
+    if (!isAssetOrInternal) {
+      // Rule A: Anyone accessing /admin on runs-on.dev is routed to the dedicated admin host on vercel.app
+      if (host.includes('runs-on.dev') && pathname.startsWith('/admin')) {
+        const adminUrl = new URL(`https://shefeer.vercel.app${pathname}${search}`);
+        return NextResponse.redirect(adminUrl, 307);
+      }
+
+      // Rule B: Anyone accessing public pages on vercel.app is redirected to the primary domain on runs-on.dev
+      if (
+        host.includes('vercel.app') &&
+        !pathname.startsWith('/admin') &&
+        !pathname.startsWith('/api/admin')
+      ) {
+        const primaryUrl = new URL(`https://shefeer.runs-on.dev${pathname}${search}`);
+        return NextResponse.redirect(primaryUrl, 308);
+      }
+    }
+  }
 
   // 1. Fast-path check: block unauthenticated /api/admin/* requests (except login) at the edge
   if (pathname.startsWith('/api/admin') && pathname !== '/api/admin/auth/login') {
@@ -40,7 +69,9 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/admin/:path*',
-    '/api/admin/:path*'
-  ]
+    /*
+     * Match all request paths except static files and icons:
+     */
+    '/((?!_next/static|_next/image|favicon.ico|icon.svg|robots.txt).*)',
+  ],
 };

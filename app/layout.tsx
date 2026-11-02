@@ -3,6 +3,8 @@ import './globals.css';
 import { siteConfig } from '@/lib/site-config';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://shefeer.runs-on.dev'),
+  alternates: { canonical: '/' },
   title: `${siteConfig.brandName} — Muhammed Shefeer K | Freelance Video Editor`,
   description: `${siteConfig.fullName} is a freelance video editor with 2+ years of experience based in Kochi, Kerala, India. Specializing in short-form reels, YouTube editing, podcasts, cinematic edits, and promotional videos.`,
   keywords: [
