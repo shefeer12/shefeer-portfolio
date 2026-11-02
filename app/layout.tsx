@@ -67,11 +67,11 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
-    ? {
-        google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
-      }
-    : undefined,
+  verification: {
+    google:
+      process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ||
+      'fXXJ2YwzLNlOZqFmQS3stiSk6fon1veyW4xWshgvNdE',
+  },
 };
 
 export const viewport: Viewport = {
